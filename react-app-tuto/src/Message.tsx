@@ -2,7 +2,7 @@
 function Message() {
     // JSX: JavaScript XML
     // you can use Dynamic content
-    const name = "Mirana";
+    const name = "MiiRanna";
     if (name)
         // you can use a function too, exp: getName() 
         return <h1>Hello {name}</h1>;
