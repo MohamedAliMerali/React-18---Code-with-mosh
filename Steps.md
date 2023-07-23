@@ -61,13 +61,28 @@ You'll find some files and fodlers in your project:
 - tsconfig.json: bunch of settings for telling the TypeScript compiler how to compile our code to Js(you won't need to touch this unless if you are an advanced user)
 - vits.config.ts: no need to touch it X)
 
+# Creating a React App
 
-# Creating a React App 
+The extension of TypeScript files should be "ts" or "tsx", often "ts" is used for plain TypeScript files, and "tsx" for React component, to create this last one you can use js class or a function, function are more popular now since they are easy and concise.
 
+1. go to "src" folder and write new file 'Message'
+2. create 'Message' function (use PascalCasing)
+3. export the function as default
+4. go to 'App.tsx" and delete what is there
+5. import the Message component
+6. create App component and return ur components (Message inside the dive)
+7. export the App component
+
+PS1: this syntaxe is not HTML, it is JSX (JavaScript XML), that code under the hood will be compiled down to Js (you can use Babeljs to check this).
+
+PS2: 'hmr' is short for 'hot model replacement', vite monitor the changes and refresh the page automatically.
+
+# How React works
 
 #
+
 #
-#
+
 #
 
 # Resources
