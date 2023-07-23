@@ -73,11 +73,34 @@ The extension of TypeScript files should be "ts" or "tsx", often "ts" is used fo
 6. create App component and return ur components (Message inside the dive)
 7. export the App component
 
-PS1: this syntaxe is not HTML, it is JSX (JavaScript XML), that code under the hood will be compiled down to Js (you can use Babeljs to check this).
+PS1: this syntaxe is not HTML, it is **JSX** (JavaScript XML), that code under the hood will be compiled down to Js (you can use Babeljs to check this).
 
-PS2: 'hmr' is short for 'hot model replacement', vite monitor the changes and refresh the page automatically.
+PS2: **'hmr'** is short for 'hot model replacement', vite monitor the changes and refresh the page automatically.
 
 # How React works
+
+Now we have a component tree with tha App beign the root (or top level component), and the message beign a child. when our Application start, Reacts take this component tree and build a JavaScript DataStructure called **'Vitual DOM'**, this one is different from the actuall DOM in the browser, it's a light weight in memory representation of our component tree, where each node represent a component and its properties.
+
+when the state or the data of a component changes, React update the coresponding Node in the viryual DOM to reflect the new state, then it compares the current version of the current DOM with the older version to identify the node that should be updated, it will then update those nodes in the actuall DOM.
+
+Techniqually, updating the DOM is not done by react itself, it's done by companion library called **React DOM**
+
+# React Ecosystem
+
+**React** is a js library for building user interfaces, in contrast, there is also other tools such as **Angular** and **vue** which are frameworks.
+
+- Library: A tool that provides speific functionality.
+- Framework: A set of tools and guidelines for building apps.
+
+So, React is a tool to build user interfaces, we often needs other tools for concerns such as Routing (allowing the user to go from one piece to another), making HTTP, managing app state, internationalization, form validation, animation and so on...
+
+A great thing about react is that it doesn't have an opinion for the other tools that we'll use, so we can pick the right tools for the job.
+
+#
+
+#
+
+#
 
 #
 
