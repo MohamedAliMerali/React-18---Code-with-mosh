@@ -96,6 +96,169 @@ So, React is a tool to build user interfaces, we often needs other tools for con
 
 A great thing about react is that it doesn't have an opinion for the other tools that we'll use, so we can pick the right tools for the job.
 
+# Creating a ListGroup Component
+
+1. install bootsrap (5.2.3v was used here)
+2. clear all css (index and app css files) and remove the import in main
+3. import bootstrap in main.tsx
+
+   ```tsx
+   import "bootstrap/dist/css/bootstrap.css";
+   ```
+
+4. add a folder named 'components', this is not necessarly but by convention we putt all of our component in a floder called components.
+5. add file named 'ListGroup.tsx' then import it in the 'App.tsx' file
+6. add the ListGroup from bootstrap and pay attention to the class error.
+
+PS1: class is a reserved keyword in JavaScript or typescript, ypu need to rename it to 'className'.
+
+PS2: Prettier automatically wrap our JSX markup in parentheses to break the markup into multiple lines.
+
+# Fragment
+
+In React, a component cannot return more then one element, bcs each expression will get compiled to JavaScript(translated to React.createElement('h1')), the same thing will happen for the 2nd element, so we're retuning multiple element and this is not allowed in react.
+
+To solve this we can wrap the whole code inside a div or another expression, but like that we're adding one extra element in the DOM just to make react happy which is unecesssary.
+
+We can use Fragment, so we won't have any additional element.
+
+```jsx
+import { Fragment } from "react";
+// ...
+//
+
+function ListGroup() {
+  return (
+    <Fragment>
+      <h1></h1>
+      <ul></ul>
+    </Fragment>
+  );
+}
+```
+
+We can achive the same result with less code, using empty angle brackets we're telling react to use a Fragment to wrap all of the childrens.
+
+```jsx
+// ...
+
+function ListGroup() {
+   return (
+      <>
+         <h1></h1>
+         <ul></ul>
+      <>
+   );
+}
+```
+
+# Rendering Lists
+
+To render a List of items dynamically, we need the map method, we will convert each item to an li element:
+
+```jsx
+// ...
+
+const items = ["New York", "San Francisco", "Tokyo", "London", "Paris"];
+
+function ListGroup() {
+  return (
+    <>
+      <h1>List</h1>
+      <ul>
+        {items.map((item) => (
+          <li>{item}</li>
+        ))}
+      </ul>
+    </>
+  );
+}
+```
+
+PS1: This expression(items.map(item => <li>{item}</li>)) will give an error bcs it's not allowed in JSX markup, we need to wrap it in curly braces
+
+PS2: If you go to the console, you'll find an error that says 'Warning: Each child in a list should have a unique "key={}" prop.', which means when we map each item to a list item, the warning is saying that each item should have "key" property that uniquely identify that item, Reacts needs this to keep track of our item so later when we add or remove items dynamically, React knows what part of the page should be updated.
+
+# Conditional Rendering
+
+```jsx
+let items = [];
+function ListGroup() {
+  // Condition
+  if (items.length === 0)
+    return (
+      <>
+        <h1>List</h1>
+        <p>No item found</p>
+      </>
+    );
+
+  return (
+    <>
+      <h1>List</h1>
+      <ul>
+        {items.map((item) => (
+          <li key={item}>{item}</li>
+        ))}
+      </ul>
+    </>
+  );
+}
+// ==> The code has some duplication
+```
+
+```jsx
+function ListGroup() {
+  let items = [];
+  return (
+    <>
+      <h1>List</h1>
+      <ul>
+        {items.length === 0 ? <p>No item found</p> : null}
+        {items.map((item) => (
+          <li key={item}>{item}</li>
+        ))}
+      </ul>
+    </>
+  );
+}
+```
+
+This logic may can get complicated and polute our JSX markup, we can extract that logic and store the result in a variable, EXP:
+
+```jsx
+function ListGroup() {
+  let items = [];
+   // const message = items.length === 0 ? <p>No item found</p> : null;
+   // you can also use a function
+
+  const getMessage() => {
+   return items.length === 0 ? <p>No item found</p> : null;
+  }
+  return (
+    <>
+      <h1>List</h1>
+      <ul>
+        {getMessage()}
+        {items.map((item) => (
+          <li key={item}>{item}</li>
+        ))}
+      </ul>
+    </>
+  );
+}
+```
+
+A function is better because it can take some parameters, and have different results. in cas we don't have that scenario, its better to use a constant.
+
+PS: A better way to write that condition, if the first condition is true, the result of the expression will be the second part(p element), otherwise the result will be false and nothing will be rendered on the screen, it's a common technique that React developer use to render content dynamically.
+
+```jsx
+{
+  items.length === 0 && <p>No item found</p>;
+}
+```
+
 #
 
 #

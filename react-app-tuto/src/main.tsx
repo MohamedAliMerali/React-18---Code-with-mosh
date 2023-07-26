@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.tsx'
-import './index.css'
+import 'bootstrap/dist/css/bootstrap.css'
 
 // Here we are using ReactDOM to render the component tree down below
 // inside the element of the id of the root 
