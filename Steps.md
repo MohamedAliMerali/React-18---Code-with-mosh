@@ -259,9 +259,162 @@ PS: A better way to write that condition, if the first condition is true, the re
 }
 ```
 
-#
+# Handling Events
 
-#
+I React, has property called on click as this code shows, inside the braces we can write an arrow function to test it.
+
+The line where we are maping each item to a list item using the map function, so when creating that list we have acces to each item because we are using that item as a key for each list item, so we can log the item.
+
+When maping item we can optionally add a second parameter as an **index**.
+
+The arrow function can optionally have a parameter that represent thebrowser event, you can call it **e** or **event**
+
+```jsx
+function ListGroup() {
+  let items = [];
+  return (
+    <ul>
+      {items.length === 0 && <p>No item found</p>}
+      items.map((item, index) => (<li
+        className="list-group-item"
+        key={item}
+        onClick={() => console.log(index, item)}
+      >
+        {item}
+      </li>
+      ))}
+    </ul>
+  );
+}
+```
+
+PS: it's totally fine to write the logiq of a function in the same line only if it was simple, if the function got complicated you may need to transform the logique into seperate function.
+
+```jsx
+import { MouseEvent } from "react";
+
+function ListGroup() {
+  let items = ["Tokyo", "New York"];
+  // we start by the word handle by convention, and then we specify the type of events
+  // in this case the type of the event is a click event, we call this an event Handler
+  const handleClick = (event: MouseEvent) => console.log(event);
+  // Here we will have a woring from Ts compiler saying: Parameter 'event' implicitly has 'any' type
+  // The reason is Ts compiler doesn't know the type of this parameter, if we use the dot operator
+  // we cannot see any property of this event object, this is where we need to specify the type of our
+  // parameters so we get auto completion and type safety
+
+  // Solution: import the MouseEvent as you can see on top of the code
+  // add the type after the parameter, we call this type annotation in TypeScript
+  // like this we can see the properties of the MouseEvent object, we can have auto completion and type-safety
+  // and it is easier to refactor or restructure the code
+  return (
+    <ul>
+      {items.length === 0 && <p>No item found</p>}
+      items.map((item, index) => (<li
+        className="list-group-item"
+        key={item}
+        // PS: Here the Ts compiler knows the type of our parameter
+        // but the other exp we're declaring a brand  new function that our compiler
+        // have no idea what's this about or where we're gonna use this
+        onClick={handleClick}
+        // onClick={(event) => console.log(index, item, event)}
+        // Here the event will return (SyntheticBaseEvent)
+        // it's one of the built-in classes from React, because
+        // different browser have different implementations of events objects
+        // So to make it cross browser, React team created this class, that is
+        // a wrapper around the native browser event obejct.
+      >
+        {item}
+      </li>
+      ))}
+    </ul>
+  );
+}
+```
+
+# Managing state
+
+```jsx
+const arr = useState(-1); // A
+arr[0]; // variable (like selectedIndex)
+arr[1]; // updater function that update the first variable and React wuill get notified
+```
+
+Instead of working with 2 elements here, it's better to destructure this array into 2 elemnts. For Exp: [selectedIndex, setSelectedIndex], it's convention we use in React applications
+
+
+```jsx
+const [selectedIndex, setSelectedIndex] = useState(-1); 
+// selectedIndex: state variables 
+// setSelectedIndex: that's a function
+```
+
+As another example, we can use the state hook to declare another variable called name
+
+```jsx
+const [name, setName] = useState(''); 
+```
+
+That's how we can tell React that our component has states that will change over time.
+
+PS: Each component gonna have it's own state, so if we doubled the ListGroup component, each list gonna have its own state, they will be indepondent.
+
+```jsx
+import { useState } from "react";
+
+function ListGroup() {
+  const items = ["New York", "San Francisco", "Tokyo", "London", "Paris"];
+  // items = [];
+
+  // let selectedIndex = 0; // -1 means no item is selected / 0 for 1st item
+  // this var is a local to this fucntion component, React is not aware of it
+  // we need to tell react that this component is going to have data
+  // or states that may chnage over the time, we need a built-in function called useState
+
+  // this function called Hook
+  // Hook: is a function that allows us to tape in to built-in function in react
+  // this one called state hook, using this one we can tell React that this component
+  // can have data or state that will change over time
+  //
+  // instead of declaring a varibales by the old way, we gonna call 'useState()' function
+  // then we're gonna initialize our varibale and give it the initial value of -1
+  // that will return array that contains 2 elements
+
+  // const arr = useState(-1);
+  const arr = useState(-1); // instead of working with 2 elements jhere, it's better to
+  arr[0]; // variable (like selectedIndex)
+  arr[1]; // updtaer function that update the first variable and React wuill get notified
+  // and we'll knows that the sate of our component changed, then it will rerender the
+  // component which causes the DOM to be updated under the hood.
+
+  // recap: with React we almost don't have to work with tha DOM directly, we think in terms of
+  // components that have states, when the state of a component chnages, React will update the DOM
+  // to match the new component state
+
+  return (
+    <>
+      <h1>List</h1>
+      <ul className="list-group">
+        {items.map((item, index) => (
+          <li
+            className={
+              selectedIndex === index
+                ? "list-group-item active"
+                : "list-group-item"
+            }
+            key={item}
+            onClick={() => {
+              selectedIndex = index;
+            }}
+          >
+            {item}
+          </li>
+        ))}
+      </ul>
+    </>
+  );
+}
+```
 
 #
 
