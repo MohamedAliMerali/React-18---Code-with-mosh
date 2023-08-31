@@ -1,14 +1,12 @@
-
 function Message() {
-    // JSX: JavaScript XML
-    // you can use Dynamic content
-    const name = "MiiRanna";
-    if (name)
-        // you can use a function too, exp: getName() 
-        return <h1>Hello {name}</h1>;
-    return <h1>Hello world</h1>;
-    // return <h1>Hello React</h1>
-    
+  // JSX: JavaScript XML
+  // you can use Dynamic content
+  const name = "MiiRanna";
+  if (name)
+    // you can use a function too, exp: getName()
+    return <h1>Hello {name}</h1>;
+  return <h1>Hello world</h1>;
+  // return <h1>Hello React</h1>
 }
 
 export default Message;
