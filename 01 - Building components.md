@@ -4,7 +4,7 @@
 
 Good understanding of:
 
-- HTMLL
+- HTML
 - CSS
 - JavaScript
 
@@ -47,7 +47,7 @@ First it will ask you to install a package, Now set the project name, 'vite-proj
 3. Run the web server "npm run dev"
 4. Open the @ you got on the browser
 
-Now open that folder with VS Code with "code ."
+Now open that folder with VS Code with the command: "code ."
 
 # Project structure
 
@@ -92,7 +92,7 @@ Techniqually, updating the DOM is not done by react itself, it's done by compani
 - Library: A tool that provides speific functionality.
 - Framework: A set of tools and guidelines for building apps.
 
-So, React is a tool to build user interfaces, the only thing that is good at is creating dynamic and interactive user interfaces, we often needs other tools for concerns such as Routing (allowing the user to go from one piece to another), making HTTP, managing app state, internationalization, form validation, animation and so on...
+So, React is a tool to build user interfaces, the only thing that is good at is creating dynamic and interactive user interfaces, we often needs other tools for concerns such as Routing (allowing the user to go from one page to another), making HTTP, managing app state, internationalization, form validation, animation and so on...
 
 A great thing about react is that it doesn't have an opinion for the other tools that we'll use, so we can pick the right tools for the job.
 
@@ -265,7 +265,7 @@ PS: A better way to write that condition, if the first condition is true, the re
 
 # Handling Events
 
-React has a property called on click as this code shows, inside the braces we can write an arrow function to test it.
+React has a property called onClick as this code shows, inside the braces we can write an arrow function to test it.
 
 The line where we are maping each item to a list item using the map function, so when creating that list we have acces to each item because we are using that item as a key for each list item, so we can log the item.
 
@@ -292,7 +292,7 @@ function ListGroup() {
 }
 ```
 
-PS: it's totally fine to write the logiq of a function in the same line only if it was simple, if the function got complicated you may need to transform the logique into seperate function.
+PS: it's totally fine to write the logic of a function in the same line only if it was simple, if the function got complicated you may need to transform the logic into seperate function.
 
 ```jsx
 import { MouseEvent } from "react";
@@ -300,17 +300,16 @@ import { MouseEvent } from "react";
 function ListGroup() {
   let items = ["Tokyo", "New York"];
   // we start by the word handle by convention, and then we specify the type of events
-  // in this case the type of the event is a click event, we call this an event Handler
+  // in this case the type of the event is a click event, we call this an event handler
   const handleClick = (event: MouseEvent) => console.log(event);
-  // Here we will have a worning from Ts compiler saying: Parameter 'event' implicitly has 'any' type
+  // Here we will have a warning from Ts compiler saying: Parameter 'event' implicitly has 'any' type
   // The reason is Ts compiler doesn't know the type of this parameter, if we use the dot operator
-  // we cannot see any property of this event object, this is where we need to specify the type of our
-  // parameters so we get auto completion and type safety
+  // we cannot see any property of this event object, this is where we need to specify the type of our parameters so we get auto completion and type safety
 
   // Solution: import the MouseEvent as you can see on top of the code
   // add the type after the parameter, we call this type annotation in TypeScript
   // like this we can see the properties of the MouseEvent object, we can have auto completion and type-safety
-  // and it is easier to refactor or restructure the code
+  // and it's easier to refactor or restructure the code
   return (
     <ul>
       {items.length === 0 && <p>No item found</p>}
@@ -318,7 +317,7 @@ function ListGroup() {
         className="list-group-item"
         key={item}
         // PS: Here the Ts compiler knows the type of our parameter
-        // but the other exp we're declaring a brand  new function that our compiler
+        // but the other exp we're declaring a brand new function that our compiler
         // have no idea what's this about or where we're gonna use this
         onClick={handleClick}
         // onClick={(event) => console.log(index, item, event)}
@@ -336,6 +335,35 @@ function ListGroup() {
 }
 ```
 
+PS: in order to print the item using a separate function, we got do some changes, as you can see here:
+
+```jsx
+const handleClick = (item: string, index: number) => {
+  console.log(index, item);
+};
+
+function ListGroup() {
+  return (
+    <>
+      <h1>List Group</h1>
+      <ul className="list-group">
+        {items.map((item, index) => (
+          <li
+            className="list-group-item"
+            onClick={() => handleClick(item, index)}
+            // Pass the item to handleClick
+          >
+            {item}
+          </li>
+        ))}
+      </ul>
+    </>
+  );
+}
+
+export default ListGroup;
+```
+
 # Managing state
 
 ```jsx
@@ -351,9 +379,9 @@ function ListGroup() {
   // or states that may chnage over the time, we need a built-in function called useState
 
   // this function called Hook
-  // Hook: is a function that allows us to tape in to built-in function in react
-  // this one called state hook, using this one we can tell React that this component
-  // can have data or state that will change over time
+  // Hook: is a function that allows us to tape into built-in function in react
+  // this one called state hook, using this one we can tell React that
+  // this component can have data or state that will change over time
   //
   // instead of declaring a varibales by the old way, we gonna call 'useState()' function
   // then we're gonna initialize our varibale and give it the initial value of -1
@@ -366,9 +394,10 @@ function ListGroup() {
   // and we'll knows that the sate of our component changed, then it will rerender the
   // component which causes the DOM to be updated under the hood.
 
-  // recap: with React we almost don't have to work with tha DOM directly, we think in terms of
-  // components that have states, when the state of a component chnages, React will update the DOM
-  // to match the new component state
+  // recap: with React we almost don't have to work with the DOM
+  // directly, we think in terms of components that have states,
+  // when the state of a component changes,  React will update
+  // the DOM to match the new component state
 
   const [selectedIndex, setSelectedIndex] = useState(-1);
   // selectedIndex: state variables
@@ -446,7 +475,7 @@ We use Props, or Properties when we want to make a component resuable. Props are
 
 Instead of defining the items that you wanna use inside a component, we should be able to pass them as an input to our component, same as calling a function and give it an argument.
 
-So Fisrt, we need to decide the sahpe of input to this component, in our example here, we should be able to pass an object with 2 properties, 'items', which is going to be an Array, and 'heading' which is a String.
+So Fisrt, we need to decide the shape of input to this component, in our example here, we should be able to pass an object with 2 properties, 'items', which is going to be an Array, and 'heading' which is a String.
 
 To do that we need on of TypeScript features called an **interface**, with the use of this features, we can define the shape, or the interface of an object.
 
@@ -459,6 +488,7 @@ interface Props {
   items: string[];
   heading: string;
 }
+// PS: we declare this in our component
 ```
 
 Now we give the function a parameter called props, of type Props. after this step, in the 'App' component you'll get 2 compilation errors saying: Type '{}' is missing the following properties from type 'Props': items, heading.
@@ -529,6 +559,8 @@ function ListGroup({ items, heading }: Props) {
 }
 return (
   <div>
+    {/* we will get the error here, Ts compiler is telling us that this
+      component expect 2 properties(items and heading) that we had not specify*/}
     {/* we can set them just as attributes from HTML elements */}
     <ListGroup items={items} heading="Cities" onSelectItem={handleSelectItem} />
 
@@ -536,8 +568,6 @@ return (
       we can use warp the heading in braces {""}, howevere, it is not
       necessary because we are passing a static value*/}
     {/* <ListGroup /> */}
-    {/* we will get the error here, Ts compiler is telling us that this
-      component expect 2 properties(items and heading) that we had not specify*/}
   </div>
 );
 ```
@@ -546,7 +576,7 @@ return (
 
 In a real world application, something should happen after an item is selected, perhaps we wanna filter some objects or we wanna redirect user to another page.
 
-What happens will be different from an app to another, we don't wanna hard-coded this, we don't wanna write this piece of logiq inside our list group component because it's not gonna a resuable component anymore, we need a way to notify the parent component that an item is selected.
+What happens will be different from an app to another, we don't wanna hard-coded this, we don't wanna write this piece of logic inside our list group component because it's not gonna a resuable component anymore, we need a way to notify the parent component that an item is selected.
 
 To implement this, we need to modify the props object, we're using its properties to pass data to our component, we can add a third property which is going to be a function, it will take a parameter called item of type string, that is the selected item, and it returns void.
 
@@ -670,13 +700,13 @@ Exp:
 </div>
 ```
 
-Now, we need to follow some steps. FirstGo to component folder and add a file called 'Alert.tsx', add the Alert component to our 'App' and test. for the alert we need to barrow some code from bootstrap, get 'alert' (class="alert alert-primary" alert is the base class, the 2nd class will determine the color).
+Now, we need to follow some steps. First, Go to the components folder and add a file called 'Alert.tsx', add the Alert component to our 'App' and test. for the alert we need to barrow some code from bootstrap, get 'alert' (class="alert alert-primary". alert is the base class, the 2nd class will determine the color).
 
     PS: Her's a shortcut: instead of defining a function 'Alert()' and exporting it, we can use a shortcut, go to the extension panel and search for 'ES7+'. after installing that extension, just type 'rafce' (short for 'reactArrowFunctionComponentExport'), you'll get a code snipest with multi-cursor editing.
 
     PS: no need to import react there.
 
-If we wanna make it dynamic, weill have to add text as a Prop, so we need to add an interface to define the shape of Prop, and then add a parameter of type Props(better to destructure it as uk).
+If we wanna make it dynamic, we will have to add text as a Prop, so we need to add an interface to define the shape of Prop, and then add a parameter of type Props(better to destructure it as uk).
 
 Back to 'App' component, set the text attribute for the 'Alert' component, Here's the code we made so far:
 
@@ -712,25 +742,25 @@ function App() {
 
 Furthermore, the way we passed the text is kinda ugly, what if the text is bit too long? or what if we wanna pass HTML content, it is ugly to pass it in a prop like that, it is better to pass it in a child.
 
-Go to 'Alert' component, there is a special Props that all components support, it called childrens, you only need to rename 'text' to 'children'.
+Go to 'Alert' component, there is a special Props that all components support called childrens, you only need to rename 'text' to 'children'.
 
 ```tsx
 {
   /*<!-- Alert component -->*/
 }
-import { ReactNode } from "react";
-
 interface Props {
   children: string; /*rename it here*/;
 }
 
+/*rename it here too*/
 const Alert = ({ children }: Props) => {
-  /*rename it here too*/
   return <div className="alert alert-primary">{children}</div>;
 };
 
 export default Alert;
 ```
+
+Now you can pass the text like this:
 
 ```jsx
 {
@@ -741,7 +771,6 @@ import Alert from "./components/Alert";
 function App() {
   return (
     <div>
-      /*Now you can pass the text like this*/
       <Alert>Hello there!</Alert>
     </div>
   );
@@ -754,17 +783,20 @@ Note: if we wanna pass HTML content, we'll get a compilation error, because we t
 {
   /*<!-- Alert component -->*/
 }
+import ReactNode from "react";
+
 interface Props {
   children: ReactNode /*rename it here*/;
 }
 
 const Alert = ({ children }: Props) => {
-  children: string; /*rename it here too*/
   return <div className="alert alert-primary">{children}</div>;
 };
 
 export default Alert;
+```
 
+```tsx
 {
   /*<!-- App component -->*/
 }
@@ -830,11 +862,73 @@ const ButtonsExercice = ({ children, color = "primary", onClick }: Props) => {
 # Showing an Alert exercice
 
 ```jsx
+// <-- Alert Component -->
+interface Props {
+  children: string;
+  onClose: () => void;
+}
 
+const Alert = ({ children, onClose }: Props) => {
+  return (
+    // "alert alert-warning alert-dismissible fade show"
+    <div
+      className="alert alert-warning alert-dismissible fade show"
+      role="alert"
+    >
+      {children}
+      <button
+        type="button"
+        className="btn-close"
+        data-bs-dismiss="alert"
+        aria-label="Close"
+        onClick={onClose}
+      ></button>
+    </div>
+  );
+};
+
+export default Alert;
 ```
 
 ```jsx
+// <-- Button Component -->
+interface Props {
+  children: string;
+  onClick: () => void;
+}
 
+const Button = ({ children, onClick }: Props) => {
+  return (
+    <button type="button" className="btn btn-primary" onClick={onClick}>
+      {children}
+    </button>
+  );
+};
+
+export default Button;
+```
+
+```jsx
+// <-- App Component -->
+import { useState } from "react";
+import Button from "./components/Button";
+import Alert from "./components/Alert";
+
+function App() {
+  const [alertVisible, setAlertVisible] = useState(false);
+  return (
+    <>
+      {alertVisible && (
+        <Alert onClose={() => setAlertVisible(false)}>
+          The Alert is Alerting
+        </Alert>
+      )}
+      <Button onClick={() => setAlertVisible(true)}>My Button</Button>
+    </>
+  );
+}
+
+export default App;
 ```
 
 # Resources

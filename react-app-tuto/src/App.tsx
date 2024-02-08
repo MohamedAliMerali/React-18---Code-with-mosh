@@ -8,17 +8,164 @@
 // import ListGroup from "./components/ListGroup";
 // import Message from "./Message";
 
+import axios, { CanceledError } from "axios";
+import { useEffect, useState } from "react";
+
 // ///////////////////////////////////////////////////////////////////////////
-import Form from "./components/Form";
+interface User {
+  name: string;
+  id: number;
+}
 
 function App() {
+  const [users, setUsers] = useState<User[]>([]);
+  const [error, setError] = useState("");
+  const [isLoading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    setLoading(true);
+    axios
+      .get<User[]>("https://jsonplaceholder.typicode.com/users", {
+        signal: controller.signal,
+      })
+      .then((res) => {
+        setUsers(res.data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        if (err instanceof CanceledError) return;
+        setError(err.message);
+        setLoading(false);
+      });
+    // .finally(() => {
+    //   // this won't work in strict mode, use the other lines
+    //   setLoading(false);
+    // });
+
+    return () => controller.abort();
+  }, []);
+
+  const deleteUser = (user: User) => {
+    const originalUsers = [...users];
+    // we're setting the users first, Optimistic Updates
+    // we pass all the users except the given one
+    setUsers(users.filter((u) => u.id !== user.id));
+
+    axios
+      .delete("https://jsonplaceholder.typicode.com/users/" + user.id)
+      .catch((err) => {
+        setError(err.message);
+        setUsers([...originalUsers]);
+      });
+  };
+
+  const addUser = () => {
+    // we're setting the users first, Optimistic Updates
+    const originalUsers = [...users];
+    const newUser = { id: 0, name: "whatDidUJustSay!" };
+    setUsers([newUser, ...users]);
+
+    axios
+      .post("https://jsonplaceholder.typicode.com/users", newUser)
+      .then((res) => {
+        setUsers([res.data, ...users]);
+        console.log("DONE");
+      })
+      .catch((err) => {
+        setError(err.message);
+        setUsers(originalUsers);
+      });
+  };
+
+  function updateUser(user: User): void {
+    const originalUsers = [...users];
+    const updatedUser = { ...user, name: user.name + "!" };
+
+    setUsers(users.map((u) => (u.id === user.id ? updatedUser : u)));
+
+    axios
+      .patch(
+        "https://jsonplaceholder.typicode.com/users/" + user.id,
+        updatedUser
+      )
+      .catch((err) => {
+        setError(err.message);
+        setUsers([...originalUsers]);
+      });
+  }
+
   return (
     <>
-      <Form></Form>
+      {error && <p className="text-danger">{error}</p>}
+      {isLoading && <div className="spinner-border"></div>}
+      <button className="btn btn-primary mb-3" onClick={() => addUser()}>
+        Add
+      </button>
+      <ul className="list-group">
+        {users.map((user) => (
+          // li is a flex container here
+          // one of the utility classes in bootstrap, d is short for display
+          <li
+            key={user.id}
+            className="list-group-item d-flex justify-content-between"
+          >
+            {user.name}
+            {/* we're adding this div to keep both buttons together on the right side */}
+            <div>
+              <button
+                className="btn btn-secondary mx-2"
+                onClick={() => updateUser(user)}
+              >
+                Update
+              </button>
+              <button
+                className="btn btn-outline-danger"
+                onClick={() => deleteUser(user)}
+              >
+                Delete
+              </button>
+            </div>
+          </li>
+        ))}
+      </ul>
     </>
   );
 }
+// // ///////////////////////////////////////////////////////////////////////////
+
+// function App() {
+//   const [category, setCategory] = useState("");
+
+//   return (
+//     <div>
+//       <select
+//         name=""
+//         id=""
+//         className="form-select"
+//         onChange={(event) => setCategory(event.target.value)}
+//       >
+//         <option value=""></option>
+//         <option value="Clothing">Clothing</option>
+//         <option value="Household">Household</option>
+//       </select>
+//       <ProductList category={category} />
+//     </div>
+//   );
+// }
+
 // ///////////////////////////////////////////////////////////////////////////
+// import Form from "./components/Form";
+
+// function App() {
+//   return (
+//     <>
+//       <Form></Form>
+//     </>
+//   );
+// }
+// // ///////////////////////////////////////////////////////////////////////////
 // // PureMessage
 // import PureMessage from "./components/PureMessage";
 

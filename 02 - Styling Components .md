@@ -13,7 +13,7 @@ You'll Learn
 
 in programing, we have a concept called **'Cohesion'**, it means that things that are related should be next to each others, things that are unrelated should be separate. if ListGroup component will be dependent on its css files, if tomorrow we wanna share that files, we'll go to 2 different folders and share 2 separate files.
 
-There is a "rd approach, we can put the component and its css file in a seperate folder, it will have all the materials or all the buildings block of the component, a css and ts file.
+There is a 3rd approach, we can put the component and its css file in a seperate folder, it will have all the materials or all the buildings block of the component, a css and ts file.
 
     NOTE: moving the file will cause the import statment to breack, we need to fix the issue by going to the 'App' component and change the import statment.
 
@@ -40,9 +40,9 @@ export default ListGroup;
 
 # CSS Modules
 
-A css module is a css file in which all class names are scooped locally just like js Modules, so they allow us to use the same css className in differente files without worrying about name clashes.
+A CSS module is a CSS file in which all class names are scooped locally just like js Modules, so they allow us to use the same CSS className in differente files without worrying about name clashes.
 
-The first step to use them is to rename the css files and add **'.module'** in the file name before the css extension, like this: 'ListGroup.module.css', then updathe the reference and change the import statment, just like how we import an object from a Js or Ts file.
+The first step to use them is to rename the CSS files and add **'.module'** in the file name before the CSS extension, like this: 'ListGroup.module.CSS', then update the the reference and change the import statment, just like how we import an object from a Js or Ts file.
 
 ```jsx
 import styles from "./ListGroup.module.css"; // or like that below this
@@ -50,12 +50,19 @@ import "./ListGroup.module.css";
 ```
 
 ```jsx
- <ul className={styles["list-group"]}>
- <ul className={styles.listGroup}> // camelNotation to avoid the ugly syntaxe
- <ul className={[styles.listGroup, styles.container].join(" ")}> // for multi classes
+function listItem() {
+  return (
+    <>
+      <ul className={styles["list-group"]}></ul>
+      <ul className={styles.listGroup}></ul> {/*camelNotation to avoid the ugly syntaxe*/}
+      <ul className={[styles.listGroup, styles.container].join(" ")}> </ul>
+      {/*for multi classes*/}
+    </>
+  );
+}
 ```
 
-    PS: the className will be encoded. as part of bundeling our app, vite take all css modules and creat unique css classes for us to not worry about name clashes.
+    PS: the className will be encoded. as part of bundling our app, vite take all css modules and creat unique css classes for us to not worry about name clashes.
 
 # CSS-in-JS
 
@@ -86,7 +93,7 @@ npm i styled-component
 import styled from "styled-components";
 ```
 
-    PS: Here you'll get an error saying "Could not find a declaration file for module 'styled-components'." The Ts compiler dosen't know about the type of object defined in this library, this problem may be solved in futur versions, we have to install the type definition for this library separately.
+    PS: Here you'll get an error saying "Could not find a declaration file for module 'styled-components'." The Ts compiler dosen't know about the type of object defined in this library, this problem may be solved in future versions, we have to install the type definition for this library separately.
 
     @types is a repository that contains type defenitions for various popular Js libraries.
 
@@ -123,11 +130,11 @@ const ListItem = styled.li`
 </List>;
 ```
 
-the return value of this is gonna be a react component that has this styles applied to it, so we can store the result in a component, then we replace the regular element and replace them with the new component. Like this the jsx markup inly represent the structures and no styling.
+the return value of this is gonna be a react component that has this styles applied to it, so we can store the result in a component, then we replace the regular element and replace them with the new component. Like this the jsx markup only represent the structures and no styling.
 
-4. Another benifits, as we mentioned earlier, with this approach it is easier to style a component based on its props or states. so earlier we applied the active class dinamically if the index of the current item wass equal to selectedIndex, to implement this using styles component?
+4. Another benifits, as we mentioned earlier, with this approach it is easier to style a component based on its props or states. so earlier we applied the active class dynamically if the index of the current item was equal to selectedIndex.
 
-We can give 'ListItem' component a prop like 'active' and set it to a boolean expression like this: **'active={index === selectedIndex}'**
+to implement this using styles component, We can give 'ListItem' component a prop like 'active' and set it to a boolean expression like this: **'active={index === selectedIndex}'**
 
 Here we'll get a compilation error, we need define the shape of props to this component using an interface.
 
@@ -139,8 +146,8 @@ interface ListItemProps {
   active: boolean;
 }
 {
-  /*now we need template literal for Js/Ts to set the 
-  property dynamically based on the active props*/
+  /* now we need template literal for Js/Ts to set the 
+  property dynamically based on the active props */
 }
 const ListItem =
   styled.li <
@@ -175,7 +182,7 @@ function ListGroup({ items, heading, onSelectItem }: Props) {
 
 # Seperation of concerns
 
-Divide a program into distinct sections where each section handles a specific functionality, rather than having everything in one plcae.
+Divide a program into distinct sections where each section handles a specific functionality, rather than having everything in one place.
 
 With this our app will be:
 
@@ -184,7 +191,7 @@ With this our app will be:
 - Easier to maintain
 - Easier to modify
 
-Modularity provide a number of benifits, if our program is modular, we can build and test those modules independently and reuse them in other programs. In Modular programs, each module is respon sible for one concern.
+Modularity provide a number of benifits, if our program is modular, we can build and test those modules independently and reuse them in other programs. In Modular programs, each module is responsible for one concern.
 
 In a modul, all of the complexity and implementation details are hidden behind a well-defined interface.
 
@@ -205,7 +212,7 @@ Exp:
 
 There are several UI libraries available that can assist us in quickly building beautiful and modern applications. Some popular options includes:
 
-- Bootstrap
+- Bootstraps
 - Material UI
 - TailwindCSS
 - DaisyUI

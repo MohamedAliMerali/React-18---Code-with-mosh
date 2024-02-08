@@ -27,7 +27,7 @@ const handleClick = () => {
 
 ## State is stored outside of components
 
-In react we use states to store values, because when declaring variables inside a function are scoped to that function, when the component finishes execution, the local variables will be removed from the memory, next react re-render a component it will call the function again and the variables will be initialized to the original value.
+In react we use states to store values, because when declaring variables inside a function, they will be scoped to that function, when the component finishes execution, the local variables will be removed from the memory, next react re-render a component it will call the function again and the variables will be initialized to the original value.
 
 This why we use the State Hook to store the state outside the component.
 
@@ -108,13 +108,13 @@ In computer science, A **`Pure Function`** is a function that given the same inp
 
 React is designed around this concept, it expect every component we creat to be a pure function, so if we give it same inputs or the same props, it should always return same jsx, and this is for performance reasons, so if the input of a component hasn't change, react can skip re-rendering that component.
 
-> - A pure function is one that always returns the same result given the same input. Pure functions should not modify objects outside of the function.
+> - A pure function is one that always returns the same result given the same input.
+> - Pure functions should not modify objects outside of the function.
 > - React expects our function components to be pure. A pure component should always return the same JSX given the same input.
-> - To keep our components pure, we should avoid making changes during the render
->   phase.
+> - To keep our components pure, we should avoid making changes during the render phase.
 
 ```jsx
-// As an exp, this component isn't pure, bcs count will increases every time you use the component
+// As an exp, this component isn't pure, bcs count will increases every time you use the or we call this component.
 
 let count = 0;
 
@@ -191,7 +191,7 @@ function Drink() {
     };
     setDrink(newDrink);
 
-    // This is not bonna work
+    // This is not gonna work
     // drink.price = drink.count + 1;
     // setDrink(drink);
   };
@@ -207,11 +207,11 @@ function Drink() {
 export default Drink;
 ```
 
-    PS: It is not possible to update a property value of an state object and then use the State hook to update an object, we should have an brand new object and then update the existing object, that's how we tell react about the update.
+    PS: It is not possible to update a property value of a state object and then use the State hook to update an object, we should have an brand new object and then update the existing object, that's how we tell react about the update.
 
 > - Just like Props, we should treat object like immutable or read-only.
 
-In this example here we used State Hook to create a drink object with some properties, then we used handl function to create a brand new object to update the old object state.
+In this example here we used State Hook to create a drink object with some properties, then we used handle function to create a brand new object to update the old object state.
 
 There is a better way to do this, we can create the object inside the set function, and what would be even better is to use the spread operator to avoid setting the new values one by one, we may have an object with a lot of values, and that's very tedious.
 
@@ -224,8 +224,8 @@ setDrink({
 ```
 
 ```jsx
+// this will copy all properties of the drink object to the newDrink object
 setDrink({
-  // this will copy all properties of the drink object to the newDrink object
   ...drink,
   count: drink.count + 1,
 });
@@ -264,7 +264,7 @@ const handleClick = () => {
 
 # Updating Arrays
 
-The same goes for Array, we should not mutate or change the, we should give react a brand new array.
+The same goes for Array, we should not mutate or change them, we should give react a brand new array.
 
 ```jsx
 const [tags, setTags] = useState(["happy", "cheerful"]);
@@ -320,7 +320,7 @@ By convention we're gonna call the parameter of that function **draft**, which i
 
 You can imagine it as the copy of the body array, so we're free to mutate or modify just like a regular js object. No need to map anything, no need to do copies, we can go in that object and make many changes.
 
-Behind the scenes keep track of those changes, then it will a copy of that bugs array, with our changes applied.
+Behind the scenes keep track of those changes, then it will make a copy of that bugs array, with our changes applied.
 
 ```jsx
 function BugsArray() {
@@ -363,10 +363,56 @@ To share state between components, we should lift the state up to the closest pa
 
 The component that holds some state should be the one that updates it. If a child component needs to update some state, it should notify the parent component using a callback function passed down as a prop.
 
-As an exp, let's imagine we have 2 components, the first is a nav bar, where we can see the numbers of the items we baught, and the 2nd component is a shopping cart where we can see the details of the purchases. So when we remove an item from the Shopping cart, the number of items in the NavBar shoulb be updated in real-time.
+As an exp, let's imagine we have 2 components, the first is a nav bar, where we can see the numbers of the items we baught, and the 2nd component is a shopping cart where we can see the details of the purchases. So when we remove an item from the Shopping cart, the number of items in the NavBar should be updated in real-time.
 
-```jsx
+```tsx
+interface Props {
+  cartItemsCount: number;
+}
 
+const NavBar = ({ cartItemsCount }: Props) => {
+  return <div>NavBar: {cartItemsCount}</div>;
+};
+
+export default NavBar;
+```
+
+```tsx
+// Cart component
+interface Props {
+  cartItems: string[];
+  onClear: () => void;
+}
+
+const Cart = ({ cartItems, onClear }: Props) => {
+  return (
+    <>
+      <div>Cart</div>
+      <ul>
+        {cartItems.map((item) => (
+          <li key={item}>{item}</li>
+        ))}
+      </ul>
+      <button onClick={onClear}>Clear</button>
+    </>
+  );
+};
+export default Cart;
+```
+
+```tsx
+// App component
+function App() {
+  const [cartItems, setCartItems] = useState(["Product-1", "Produc-2"]);
+  return (
+    <div>
+      <NavBar cartItemsCount={cartItems.length} />
+      <Cart cartItems={cartItems} onClear={() => setCartItems([])} />
+    </div>
+  );
+}
+
+export default App;
 ```
 
 # Exercice
