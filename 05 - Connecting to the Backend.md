@@ -674,8 +674,164 @@ function updateUser(user: User): void {
 </div>;
 ```
 
-# Extracting a Reusable API Client
+# catching-up with the code
 
 ```tsx
+import axios, { CanceledError } from "axios";
+import { useEffect, useState } from "react";
 
+// ///////////////////////////////////////////////////////////////////////////
+interface User {
+  name: string;
+  id: number;
+}
+
+function App() {
+  const [users, setUsers] = useState<User[]>([]);
+  const [error, setError] = useState("");
+  const [isLoading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    setLoading(true);
+    axios
+      .get<User[]>("https://jsonplaceholder.typicode.com/users", {
+        signal: controller.signal,
+      })
+      .then((res) => {
+        setUsers(res.data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        if (err instanceof CanceledError) return;
+        setError(err.message);
+        setLoading(false);
+      });
+    // .finally(() => {
+    //   // this won't work in strict mode, use the other lines
+    //   setLoading(false);
+    // });
+
+    return () => controller.abort();
+  }, []);
+
+  const deleteUser = (user: User) => {
+    const originalUsers = [...users];
+    // we're setting the users first, Optimistic Updates
+    // we pass all the users except the given one
+    setUsers(users.filter((u) => u.id !== user.id));
+
+    axios
+      .delete("https://jsonplaceholder.typicode.com/users/" + user.id)
+      .catch((err) => {
+        setError(err.message);
+        setUsers([...originalUsers]);
+      });
+  };
+
+  const addUser = () => {
+    // we're setting the users first, Optimistic Updates
+    const originalUsers = [...users];
+    const newUser = { id: 0, name: "whatDidUJustSay!" };
+    setUsers([newUser, ...users]);
+
+    axios
+      .post("https://jsonplaceholder.typicode.com/users", newUser)
+      .then((res) => {
+        setUsers([res.data, ...users]);
+        console.log("DONE");
+      })
+      .catch((err) => {
+        setError(err.message);
+        setUsers(originalUsers);
+      });
+  };
+
+  function updateUser(user: User): void {
+    const originalUsers = [...users];
+    const updatedUser = { ...user, name: user.name + "!" };
+
+    setUsers(users.map((u) => (u.id === user.id ? updatedUser : u)));
+
+    axios
+      .patch(
+        "https://jsonplaceholder.typicode.com/users/" + user.id,
+        updatedUser
+      )
+      .catch((err) => {
+        setError(err.message);
+        setUsers([...originalUsers]);
+      });
+  }
+
+  return (
+    <>
+      {error && <p className="text-danger">{error}</p>}
+      {isLoading && <div className="spinner-border"></div>}
+      <button className="btn btn-primary mb-3" onClick={() => addUser()}>
+        Add
+      </button>
+      <ul className="list-group">
+        {users.map((user) => (
+          // li is a flex container here
+          // one of the utility classes in bootstrap, d is short for display
+          <li
+            key={user.id}
+            className="list-group-item d-flex justify-content-between"
+          >
+            {user.name}
+            {/* we're adding this div to keep both buttons together on the right side */}
+            <div>
+              <button
+                className="btn btn-secondary mx-2"
+                onClick={() => updateUser(user)}
+              >
+                Update
+              </button>
+              <button
+                className="btn btn-outline-danger"
+                onClick={() => deleteUser(user)}
+              >
+                Delete
+              </button>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </>
+  );
+}
 ```
+
+# Extracting a Reusable API Client
+
+Our code lately has grown quite a bit, it needs some improvments, that's what we're going to do over the few next lessons.
+
+The first issue is the duplication with the backend url, to improve this we're going to create a separate module where we store our different configuration settings for making HTTP calls.
+
+We add new folder called services in src folder, in this module we're going to add basic modules that provide services or functionalities to our application, The servecies are not about th UI, they're about functionality. we add a ts file called **api-client.ts**.
+
+In this file we're going to create new access client with a custom configuration.
+
+PS: when grabbing the URL leave the user out of the url so this URL can be reusable, maybe in other components we need to hit other end-points.
+
+We can optionally set HTTP headers (ts object '{...}'), this headers will be passed with every HTTP request, sometimes it's necessary, for exp some back-ends require us to send an API key with every HTTP request, if there is such a requirement we can pass an api key here and set it to some value.
+
+Back to our App component, we remove the axios import and we export our **apiClient**, with this service in place we can remove all axios references. we go back to our apiClient and import **CanceledError**, and then export it as a name object.
+
+```tsx
+import axios, { CanceledError } from "axios";
+
+// we call create method and give it a configuration object
+// in this object we set basic url to the url of our backend
+export default axios.create({
+  baseURL: "https://jsonplaceholder.typicode.com",
+});
+
+export { CanceledError };
+```
+
+Now the final step, everywhere we have a reference to axios, we replace that with **apiClient**. Using this apiClient, we send a request to the users end-point.
+
+With this service in place, anywhere we want to talk to our back-end, we simply import the **apiClient** and sent HTTP requests.
