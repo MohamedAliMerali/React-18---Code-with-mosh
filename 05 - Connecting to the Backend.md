@@ -835,3 +835,136 @@ export { CanceledError };
 Now the final step, everywhere we have a reference to axios, we replace that with **apiClient**. Using this apiClient, we send a request to the users end-point.
 
 With this service in place, anywhere we want to talk to our back-end, we simply import the **apiClient** and sent HTTP requests.
+
+# Extracting the user service
+
+The next issue in this code is that our component is too concerned with making HTTP request, for exp it knows about the requests methods, endpoint(which is repeated in many places) and the **AbortController** which is only about HTTP.
+
+Our component is like a chef, which is also responsible for shopping the ingrediants, he should not concider with shopping, they should only focus on theire primary responsibilty.
+
+Our component also should focus only about his primary responsability, which is returning markeup and handling user interaction at a high level. so in order to improve this code, we should extract all the logic around making HTTP requests, into a seperate service, this allow us to seperate concers and make our code more modular and reusable, potentially we can reuse this service in other components.
+
+**First**, in the services folder we add a new file called **user-service.ts**, inside this we create a class with all the functionalities we need. Check the code below
+
+```tsx
+// user-service.ts
+import apiClient from "./api-client";
+
+// this interface is only about the users,
+// it should be here not in the component
+export interface User {
+  name: string;
+  id: number;
+}
+
+class UserServcie {
+  // in this methods, were gonna have the logic for
+  // sending an HTTP requests for our backend
+  getAllUsers() {
+    const controller = new AbortController();
+
+    // return apiClient.get<User[]>("/users", {...
+    // instead of returning only this promise method, we're gonna store it
+    // in an object called resuest, and return it in the end along with
+    // a cancel method, we call controller.abort() in this function
+    // like this the consumer will only use the cancel method only
+    // for canceling a request, how it happens in irrelevant, that's
+    // implementation details
+    const request = apiClient.get<User[]>("/users", {
+      signal: controller.signal,
+    });
+    return { request, cancel: () => controller.abort() };
+  }
+
+  addUser(user: User) {
+    return apiClient.post("/users", user);
+  }
+
+  updateUser(id: number, user: User) {
+    return apiClient.patch("/users/" + id, user);
+  }
+
+  deleteUser(id: number) {
+    return apiClient.delete("/users/" + id);
+  }
+}
+
+// export new instance of this
+// class as a default object
+export default new UserServcie();
+```
+
+```tsx
+// component
+
+useEffect(() => {
+  setLoading(true);
+  const { request, cancel } = UserService.getAllUsers(); // this return a promise
+  request
+    .then((res) => {
+      setUsers(res.data);
+      setLoading(false);
+    })
+    .catch((err) => {
+      if (err instanceof CanceledError) return;
+      setError(err.message);
+      setLoading(false);
+    });
+  // .finally(() => {
+  //   // this won't work in strict mode, use the other lines
+  //   setLoading(false);
+  // });
+
+  return () => cancel();
+  // here we should return a controller object, which is about HTTP req
+  // To hide the complexity, we should return such a function from
+  // user-service, we won't import it in order to hide the complexity.
+  // return () => controller.abort();
+}, []);
+
+const deleteUser = (user: User) => {
+  const originalUsers = [...users];
+  // we're setting the users first, Optimistic Updates
+  // we pass all the users except the given one
+  setUsers(users.filter((u) => u.id !== user.id));
+
+  userService.deleteUser(user.id).catch((err) => {
+    setError(err.message);
+    setUsers([...originalUsers]);
+  });
+};
+
+const addUser = () => {
+  // we're setting the users first, Optimistic Updates
+  const originalUsers = [...users];
+  const newUser = { id: 0, name: "whatDidUJustSay!" };
+  setUsers([newUser, ...users]);
+
+  userService
+    .addUser(newUser)
+    .then((res) => {
+      setUsers([res.data, ...users]);
+      console.log("DONE");
+    })
+    .catch((err) => {
+      setError(err.message);
+      setUsers(originalUsers);
+    });
+};
+
+function updateUser(user: User): void {
+  const originalUsers = [...users];
+  const updatedUser = { ...user, name: user.name + "!" };
+
+  setUsers(users.map((u) => (u.id === user.id ? updatedUser : u)));
+
+  userService.updateUser(user.id, updatedUser).catch((err) => {
+    setError(err.message);
+    setUsers([...originalUsers]);
+  });
+}
+```
+
+With those changes, our component knows nothing about our HTTP request, it's more modular and reusable, we have better separation of concerns and we can use it anywhere to those sorts of stuff.
+
+# Creating a Generic HTTP Service

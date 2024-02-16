@@ -725,7 +725,7 @@ const Alert = ({ text }: Props) => {
 export default Alert;
 ```
 
-```jsx
+```tsx
 {
   /*<!-- App component -->*/
 }
@@ -762,7 +762,7 @@ export default Alert;
 
 Now you can pass the text like this:
 
-```jsx
+```tsx
 {
   /*<!-- App component -->*/
 }
@@ -878,6 +878,7 @@ const Alert = ({ children, onClose }: Props) => {
       {children}
       <button
         type="button"
+        q
         className="btn-close"
         data-bs-dismiss="alert"
         aria-label="Close"

@@ -9,13 +9,61 @@
 // import Message from "./Message";
 
 import { useEffect, useState } from "react";
-import apiClient, { CanceledError } from "./services/api-client";
+import { CanceledError } from "./services/api-client";
+import UserService, { User } from "./services/user-service";
+import userService from "./services/user-service";
+
+// import Form from "./components/expense-tracker/components/Form";
+// import Filter from "./components/expense-tracker/components/Filter";
+// import ExpTable from "./components/expense-tracker/components/ExpTable";
+// import { useState } from "react";
+// import { FieldValues } from "react-hook-form";
+
+// // ///////////////////////////////////////////////////////////////////////////
+
+// function App() {
+//   const [category, setCategory] = useState("");
+//   const [expenses, setExpenses] = useState([
+//     { id: 0, description: "Milk", amount: 5, category: "groceries" },
+//     { id: 1, description: "Movie", amount: 25, category: "entertainment" },
+//     { id: 2, description: "Sledge Hammer", amount: 50, category: "utilities" },
+//     { id: 3, description: "Paint", amount: 34, category: "utilities" },
+//   ]);
+
+//   const handleFormSubmit = (data: FieldValues) => {
+//     const newExpense = { id: expenses[expenses.length - 1].id + 1, ...data };
+//     console.log(newExpense);
+//     setExpenses([...expenses, newExpense]);
+//   };
+
+//   const handleFilterChange = (selectedCateg: string) => {
+//     setCategory(selectedCateg);
+//   };
+
+//   return (
+//     <>
+//       <Form onSubmit={handleFormSubmit}></Form>
+//       <Filter onChange={handleFilterChange}></Filter>
+//       <ExpTable
+//         expenses={expenses.filter(
+//           (expense) => !category || expense.category === category
+//         )}
+//         // // Another way:
+//         // expenses={
+//         //   !category
+//         //     ? expenses
+//         //     : expenses.filter((expense) => expense.category === category)
+//         // }
+//         onDelete={(id) => {
+//           console.log(id);
+//           setExpenses(expenses.filter((exp) => (id !== exp.id ? exp : null)));
+//         }}
+//       ></ExpTable>
+//     </>
+//   );
+// }
 
 // ///////////////////////////////////////////////////////////////////////////
-interface User {
-  name: string;
-  id: number;
-}
 
 function App() {
   const [users, setUsers] = useState<User[]>([]);
@@ -23,13 +71,9 @@ function App() {
   const [isLoading, setLoading] = useState(false);
 
   useEffect(() => {
-    const controller = new AbortController();
-
     setLoading(true);
-    apiClient
-      .get<User[]>("/users", {
-        signal: controller.signal,
-      })
+    const { request, cancel } = UserService.getAllUsers(); // this return a promise
+    request
       .then((res) => {
         setUsers(res.data);
         setLoading(false);
@@ -44,7 +88,11 @@ function App() {
     //   setLoading(false);
     // });
 
-    return () => controller.abort();
+    return () => cancel();
+    // here we should return a controller object, which is about HTTP req
+    // To hide the complexity, we should return such a function from
+    // user-service, we won't import it in order to hide the complexity.
+    // return () => controller.abort();
   }, []);
 
   const deleteUser = (user: User) => {
@@ -53,7 +101,7 @@ function App() {
     // we pass all the users except the given one
     setUsers(users.filter((u) => u.id !== user.id));
 
-    apiClient.delete("/users/" + user.id).catch((err) => {
+    userService.deleteUser(user.id).catch((err) => {
       setError(err.message);
       setUsers([...originalUsers]);
     });
@@ -65,8 +113,8 @@ function App() {
     const newUser = { id: 0, name: "whatDidUJustSay!" };
     setUsers([newUser, ...users]);
 
-    apiClient
-      .post("/users", newUser)
+    userService
+      .addUser(newUser)
       .then((res) => {
         setUsers([res.data, ...users]);
         console.log("DONE");
@@ -83,7 +131,7 @@ function App() {
 
     setUsers(users.map((u) => (u.id === user.id ? updatedUser : u)));
 
-    apiClient.patch("/users/" + user.id, updatedUser).catch((err) => {
+    userService.updateUser(user.id, updatedUser).catch((err) => {
       setError(err.message);
       setUsers([...originalUsers]);
     });

@@ -699,7 +699,3 @@ Down to our button, we can set the `disabled` attribute to `!isValid` so the but
 # Questions
 
 1. Hmmm...
-
-```
-
-```
