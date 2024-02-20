@@ -1,44 +1,51 @@
-import apiClient from "./api-client";
+import create from "./http-service";
 
-// this interface is only about the users,
-// it should be here not in the component
 export interface User {
   name: string;
   id: number;
 }
 
-class UserServcie {
-  // in this methods, were gonna have the logic for
-  // sending an HTTP requests for our backend
-  getAllUsers() {
-    const controller = new AbortController();
+export default create("/user");
 
-    // return apiClient.get<User[]>("/users", {...
-    // instead of returning only this promise method, we're gonna store it
-    // in an object called resuest, and return it in the end along with
-    // a cancel method, we call controller.abort() in this function
-    // like this the consumer will only use the cancel method only
-    // for canceling a request, how it happens in irrelevant, that's
-    // implementation details
-    const request = apiClient.get<User[]>("/users", {
-      signal: controller.signal,
-    });
-    return { request, cancel: () => controller.abort() };
-  }
+// // this interface is only about the users,
+// // it should be here not in the component
+// export interface User {
+//   name: string;
+//   id: number;
+// }
 
-  addUser(user: User) {
-    return apiClient.post("/users", user);
-  }
+// class UserServcie {
+//   // in this methods, were gonna have the logic for
+//   // sending an HTTP requests for our backend
+//   getAllUsers() {
+//     const controller = new AbortController();
 
-  updateUser(id: number, user: User) {
-    return apiClient.patch("/users/" + id, user);
-  }
+//     // return apiClient.get<User[]>("/users", {...
+//     // instead of returning only this promise method, we're gonna store it
+//     // in an object called resuest, and return it in the end along with
+//     // a cancel method, we call controller.abort() in this function
+//     // like this the consumer will only use the cancel method only
+//     // for canceling a request, how it happens in irrelevant, that's
+//     // implementation details
+//     const request = apiClient.get<User[]>("/users", {
+//       signal: controller.signal,
+//     });
+//     return { request, cancel: () => controller.abort() };
+//   }
 
-  deleteUser(id: number) {
-    return apiClient.delete("/users/" + id);
-  }
-}
+//   addUser(user: User) {
+//     return apiClient.post("/users", user);
+//   }
 
-// export new instance of this
-// class as a default object
-export default new UserServcie();
+//   updateUser(id: number, user: User) {
+//     return apiClient.patch("/users/" + id, user);
+//   }
+
+//   deleteUser(id: number) {
+//     return apiClient.delete("/users/" + id);
+//   }
+// }
+
+// // export new instance of this
+// // class as a default object
+// export default new UserServcie();
