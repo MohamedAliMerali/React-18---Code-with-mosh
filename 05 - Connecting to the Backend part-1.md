@@ -102,7 +102,7 @@ This function that we pass to the effect hook gets executed after each render, b
 
     To solve this problem, we should tell react to run this effect only once the first time our component is rendered.
 
-The effect function has a second argument which is optional. Here we pass an array of dependencies. In this array, we can add one or more variables which can be props or state, and our effect will be dependent on these values. If any of these values changes, we will rerun our effect, but if you pass an empty array that means this effect is not dependent on any values. So it will be executed only once.
+The effect function has a second argument which is optional. Here we pass an array of dependencies. In this array, we can add one or more variables which can be props or state, and our effect will be dependent on these values. If any of these values changes, we will rerender our effect, but if you pass an empty array that means this effect is not dependent on any values. So it will be executed only once.
 
 ```tsx
 const [products, setProducts] = useState<string[]>([]);

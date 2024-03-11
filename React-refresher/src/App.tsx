@@ -1,19 +1,34 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
-function App() {
-  const ref = useRef<HTMLInputElement>(null);
+interface User {
+  name: string;
+  id: string;
+}
+interface Post {
+  title: string;
+  id: string;
+}
 
-  // afterRunder
+function Users() {
+  const [users, setUsers] = useState([]);
+  const [posts, setPosts] = useState([]);
+
   useEffect(() => {
-    // side effect
-    if (ref.current) ref.current.focus();
-  });
+    console.log("Getting data!");
+    axios.get("https://jsonplaceholder.typicode.com/posts").then((response) => {
+      setUsers(response.data);
+      console.log(">>", response.data);
+    });
+  }, []);
 
   return (
-    <div>
-      <input type="text" className="form-control" />
-    </div>
+    <ul>
+      {posts.map((post: Post) => (
+        <li key={post.id}>{post.title}</li>
+      ))}
+    </ul>
   );
 }
 
-export default App;
+export default Users;
