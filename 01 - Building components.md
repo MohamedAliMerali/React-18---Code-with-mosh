@@ -1,5 +1,14 @@
 # React 18 - Code with Mosh
 
+## Keywords
+
+- Declarative
+- Imperative
+- React Ecosystem
+- Fragment
+- Props / states
+- children
+
 # Prerequisite
 
 Good understanding of:
@@ -19,6 +28,13 @@ The React.js framework is an open-source JavaScript framework and library develo
 In React, you develop your applications by creating reusable components that you can think of as independent Lego blocks. These components are individual pieces of a final interface, which, when assembled, form the application’s entire user interface.
 
 React’s primary role in an application is to handle the view layer of that application just like the V in a model-view-controller (MVC) pattern by providing the best and most efficient rendering execution. Rather than dealing with the whole user interface as a single unit, React.js encourages developers to separate these complex UIs into individual reusable components that form the building blocks of the whole UI. In doing so, the ReactJS framework combines the speed and efficiency of JavaScript with a more efficient method of manipulating the DOM to render web pages faster and create highly dynamic and responsive web applications.
+
+## React, a Declarative UI Programming
+
+with react, you define the targe tUI states, not the steps to get there, instead Reactwill figure out & perform the necessary steps.
+
+- **`Declarative`**: Define the goal, not the steps (React)
+- **`Imperative`**: Define the steps, not the goal (Js)
 
 # Setting up the development environments
 
@@ -48,6 +64,14 @@ First it will ask you to install a package, Now set the project name, 'vite-proj
 4. Open the @ you got on the browser
 
 Now open that folder with VS Code with the command: "code ."
+
+# initialize git repository
+
+- Steps:
+
+1. git init <!-- initialize git repository -->
+2. git add . <!-- add all the changes in the Current directory to staging area-->
+3. git commit -m "Initial commit" <!-- add all the changes in the Current directory to staging area-->
 
 # Project structure
 

@@ -418,3 +418,27 @@ export default App;
 # Exercice
 
 # Questions
+
+# Additional:
+
+```jsx
+// const [enteredTitle, setEnteredTitle] = useState("");
+// const [enteredAmount, setEnteredAmount] = useState("");
+// const [enteredDate, setEnteredDate] = useState("");
+const [userInput, setUserInput] = useState({
+  enteredTitle: "",
+  enteredAmount: "",
+  enteredDate: "",
+});
+
+const titleChangeHandler = (event) => {
+  setUserInput((prevState) => {
+    return { ...prevState, enteredTitle: event.target.value };
+  });
+  // setEnteredTitle(event.target.value);
+  // setUserInput({
+  //   ...userInput,
+  //   enteredTitle: event.target.value,
+  // });
+};
+```
