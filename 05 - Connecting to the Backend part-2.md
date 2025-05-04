@@ -7,10 +7,10 @@ We're going to add button to delete the data, we're adding some bootstrap classe
 
 To delete the data we have two options:
 
-- **Optimistic Updates:** we update the UI first then we call the server to save the changes, Here we are optimistic that the call to the server is gonna succeed most of the time so we update the user first to give the user instant feedback, and then we call the server to persist the changes
+- **Optimistic Updates:** we update the UI first then we call the server to save the changes, Here we are optimistic that the call to the server is gonna succeed most of the time so we update the user first to give the user instant feedback, and then we call the server to persist the changes.
 - **Pessimistic Updates:** We assume that the call to the server is gonna fail, so first we call the server and wait for the result, if the call is successful, then we update the UI, with this approach our UI may feel a little bit slow, so when possible it's better to use optimistic update.
 
-To delete it we use the delete method and give it the url + the user id, this will return a promise, but there is nothing you wanna do after the promise is resolved, so we weont call **then** method, we're only gonna cal **catch** method to catch potential errors, we should set an error message and restore the UI to the original state.
+To delete it we use the delete method and give it the url + the user id, this will return a promise, but there is nothing you wanna do after the promise is resolved, so we won't call **then** method, we're only gonna call **catch** method to catch potential errors, we should set an error message and restore the UI to the original state.
 
 ```tsx
 const deleteUser = (user: User) => {
@@ -29,7 +29,6 @@ const deleteUser = (user: User) => {
 ```
 
 ```tsx
-
   return (
     <>
       {error && <p className="text-danger">{error}</p>}
@@ -62,14 +61,14 @@ const deleteUser = (user: User) => {
 
 We're adding a button and making some changes to add a user. If the call is successful, we should update our list with the saved user because the new user has an id that is going to be generated on the server.
 
-    PS: one thing you need to know about this backend, its a fake one, so if you sent same requests multiple time, we will get a suer with the id of 11 everytime, and that means if we add another user, we'll get an error in the console.
+    PS: one thing you need to know about this backend, its a fake one, so if you sent same requests multiple time, we will get a user with the id of 1 everytime, and that means if we add another user, we'll get an error in the console.
 
 In case we had an error, we should show an error message to the user, and
 restore our list back to the original state, we can use a simple constant variable for this.
 
     PS: You may be wondering, why did we update the state twice with the newUser? doesn't that mean the newUser will be duplicated? well, here's what you need to know:
 
-    React update state asynchronously, Meaning of this is not immediately, it will be applied in the futur, Because as part of handling an events we could set multiple states, if React re-render the component every time we set a new one, we will end-up with too many unecessary re-renders.
+    React update state asynchronously, Meaning of this is not immediately, it will be applied in the future, Because as part of handling an events we could set multiple states, if React re-render the component every time we set a new one, we will end-up with too many unecessary re-renders.
 
     So for performance reasons, React take all of this updates, matches them and apply them later, after the event handler finishes execution. at that point, react update all states and re-render the component.
 
@@ -102,9 +101,9 @@ const addUser = () => {
 
 # updating data
 
-To update the users, we have 2 methods, we can use the **put** or the **patch** method, the difference is, in HTTP we use the put method to replace an object and tha patch method for patching or updating one or more of its properties, the method we choosed depends on how the back-end is build, some backedns don't support the batch method, they only support the put method.
+To update the users, we have 2 methods, we can use the **put** or the **patch** method, the difference is, in HTTP we use the put method to replace an object and the patch method for patching or updating one or more of its properties, the method we choosed depends on how the back-end is build, some backends don't support the batch method, they only support the put method.
 
-in this case we're using **patch method** because we're updating one single property
+in this case we're using **patch method** because we're updating one single property.
 
 ```tsx
 function updateUser(user: User): void {

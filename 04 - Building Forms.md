@@ -678,13 +678,13 @@ const Form = () => {
 
 # Disabling the Submit Button
 
-Last thing we're going to do is disabling the submit button if the form is invalid,back to our code where we're grabing the errors from our form state, we also have a property called `isValid` which we can use to tell if our form is valid or not.
+Last thing we're going to do is disabling the submit button if the form is invalid, back to our code where we're grabing the errors from our form state, we also have a property called `isValid` which we can use to tell if our form is valid or not.
 
 ```tsx
 const {
   register,
   handleSubmit,
-  formState: { errors }, // Here
+  formState: { errors, isValid }, // Here
 } = useForm<FormData>({ resolver: zodResolver(schema) });
 ```
 
@@ -764,9 +764,11 @@ export default ExpenseForm;
 
 ## Two ways binding
 
+What is a two-way binding in React? The concept of two-way binding in React typically refers to the synchronization of data between the state and the UI.
+
 Like this we can clear the inputs after submission...
 
-Two ways binding means for inputswe don't just listen to changes, but we can also pass a new value back into the inputs so we can reset orchange the input programmatically, using the value attribute and set it to the state var.
+Two ways binding means for inputs we don't just listen to changes, but we can also pass a new value back into the inputs so we can reset orchange the input programmatically, using the value attribute and set it to the state var.
 
 ```jsx
 import React, { useState } from 'react';

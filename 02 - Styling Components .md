@@ -22,7 +22,7 @@ import ListGroup from "./components/ListGroup/ListGroup";
 ```
 
     PS: This structure is a little bit ugly, we can fix this problem by creating an 'index' file in the same folder as the component.
-    By default, if we don't supply a file and we're referencing a folder, it will automatically look for a  file called 'index'.
+    By default, if we don't supply a file and we're referencing a folder, it will automatically look for a file called 'index'.
 
 ```jsx
 import ListGroup from "./components/ListGroup";
@@ -42,7 +42,7 @@ export default ListGroup;
 
 A CSS module is a CSS file in which all class names are scooped locally just like js Modules, so they allow us to use the same CSS className in differente files without worrying about name clashes.
 
-The first step to use them is to rename the CSS files and add **'.module'** in the file name before the CSS extension, like this: 'ListGroup.module.CSS', then update the the reference and change the import statment, just like how we import an object from a Js or Ts file.
+The first step to use them is to rename the CSS files and add **'.module'** in the file name before the CSS extension, like this: `ListGroup.module.CSS`, then update the reference and change the import statment, just like how we import an object from a Js or Ts file.
 
 ```jsx
 import styles from "./ListGroup.module.css"; // or like that below this
@@ -54,7 +54,8 @@ function listItem() {
   return (
     <>
       <ul className={styles["list-group"]}></ul>
-      <ul className={styles.listGroup}></ul> {/*camelNotation to avoid the ugly syntaxe*/}
+      <ul className={styles.listGroup}></ul>
+      {/*camelNotation to avoid the ugly syntaxe*/}
       <ul className={[styles.listGroup, styles.container].join(" ")}> </ul>
       {/*for multi classes*/}
     </>
@@ -62,11 +63,11 @@ function listItem() {
 }
 ```
 
-    PS: the className will be encoded. as part of bundling our app, vite take all css modules and creat unique css classes for us to not worry about name clashes.
+    PS: the className will be encoded. as part of bundling our app, vite take all css modules and create unique css classes for us to not worry about name clashes.
 
 # CSS-in-JS
 
-The idea of Css-in-js is that we can write all the styles of the components next to it's definition in a Js or Ts file.
+The idea of CSS-in-Js is that we can write all the styles of the components next to its definition in a Js or Ts file.
 
 Some Benifits of that:
 
@@ -81,13 +82,13 @@ There is different libraries that implement this concepts, the most popular ones
 - Emotion
 - Polished
 
-1.  First we need to install the styled-component like this:
+1.  First we need to install the `styled-component` like this:
 
 ```shell
 npm i styled-component
 ```
 
-2.  import 'styled'
+2.  import `styled`
 
 ```jsx
 import styled from "styled-components";
@@ -193,7 +194,7 @@ With this our app will be:
 
 Modularity provide a number of benifits, if our program is modular, we can build and test those modules independently and reuse them in other programs. In Modular programs, each module is responsible for one concern.
 
-In a modul, all of the complexity and implementation details are hidden behind a well-defined interface.
+In a module, all of the complexity and implementation details are hidden behind a well-defined interface.
 
 Some people argue that CSS-in-js violates the **Seperation of concerns** principles because we put everything in the same file, but Separation of concerns is not just about organizing code into files, but rather dividing areas of functionality, each section of a program should handle specific functionalities. Therefore, CSS-in-JS does not violate the separation of concerns principle as all the complexity for a component remains hidden behind its interface.
 
@@ -218,9 +219,9 @@ There are several UI libraries available that can assist us in quickly building 
 - DaisyUI
 - ChakraUI
 
-As we saw, **Bootstrap** has some ready-to-use component that are publicly available
+As we saw, **Bootstrap** has some ready-to-use component that are publicly available.
 
-**Material UI** is an open source React component library that implment google materials design, it's the design language used in google product
+**Material UI** is an open source React component library that implment google materials design, it's the design language used in google product.
 
 **TailwindCSS** is a utility first css library, instead of giving full component, it gives us small utility classes that we can use to style our component. this one may lead to a lot of utility classes in our markup.
 

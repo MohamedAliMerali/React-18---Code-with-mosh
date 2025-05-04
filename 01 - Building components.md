@@ -31,27 +31,29 @@ React’s primary role in an application is to handle the view layer of that app
 
 ## React, a Declarative UI Programming
 
-with react, you define the targe tUI states, not the steps to get there, instead Reactwill figure out & perform the necessary steps.
+with react, you define the target UI states, not the steps to get there, instead React will figure out & perform the necessary steps.
 
-- **`Declarative`**: Define the goal, not the steps (React)
-- **`Imperative`**: Define the steps, not the goal (Js)
+- **`Declarative`**: Define the goal, not the steps (React).
+- **`Imperative`**: Define the steps, not the goal (Js).
 
 # Setting up the development environments
 
-For this Course you need Node 16 or higher, type 'node -v' to check the version, if you don't you just need to downloads it from yhe nodeJs webiste.
+For this Course you need Node 16 or higher, type 'node -v' to check the version, if you don't you just need to downloads it from the nodeJs website.
 
 # Creating a react App
 
 ## There is 2 ways to do so:
 
-- **Create React APP (CRA)**: The official tool, provided by React team.
+- **Create React APP (CRA)**: The official tool, provided by React team. (can't use that one no more as far as ik)
 - **Vite**: it is getting increasingly popular this days bcz it's faster and gives smaller bundle sizes
 
 to create with vite you should type:
 
 ```shell
 npm create vite@latest
+```
 
+```shell
 # To specify a version (same as the course here)
 npm create vite@4.1.0
 ```
@@ -103,7 +105,7 @@ PS2: **'hmr'** is short for **'hot model replacement'**, vite monitor the change
 
 # How React works
 
-Now we have a component tree with the App beign the root (or top level component), and the message beign a child. when our Application start, Reacts take this component tree and build a JavaScript DataStructure called **'Vitual DOM'**, this one is different from the actuall DOM in the browser, it's a **light weight** in **memory representation** of our component tree, where each node represent a component and its properties.
+Now we have a component tree with the App beign the root (or top level component), and the message beign a child. when our Application start, Reacts take this component tree and build a JavaScript DataStructure called **'Virtual DOM'**, this one is different from the actuall DOM in the browser, it's a **light weight** in **memory representation** of our component tree, where each node represent a component and its properties.
 
 when the state or the data of a component changes, React update the coresponding Node in the virtual DOM to reflect the new state, then it compares the current version of the current DOM with the older version to identify the node that should be updated, it will then update those nodes in the actuall DOM.
 
@@ -113,7 +115,7 @@ Techniqually, updating the DOM is not done by react itself, it's done by compani
 
 **React** is a js library for building user interfaces, in contrast, there is also other tools such as **Angular** and **vue** which are frameworks.
 
-- Library: A tool that provides speific functionality.
+- Library: A tool that provides specific functionality.
 - Framework: A set of tools and guidelines for building apps.
 
 So, React is a tool to build user interfaces, the only thing that is good at is creating dynamic and interactive user interfaces, we often needs other tools for concerns such as Routing (allowing the user to go from one page to another), making HTTP, managing app state, internationalization, form validation, animation and so on...
@@ -122,7 +124,7 @@ A great thing about react is that it doesn't have an opinion for the other tools
 
 # Creating a ListGroup Component
 
-1. install bootsrap (5.2.3v was used here)
+1. install bootstrap (5.2.3v was used here)
 2. clear all css (index and app css files) and remove the import in main
 3. import bootstrap in main.tsx
 
@@ -175,6 +177,41 @@ function ListGroup() {
    );
 }
 ```
+
+## Additional:
+
+You may wonder why a component can't return more then one element? Here's why, check out this code:
+
+```tsx
+return React.createElement(
+  "div",
+  {},
+  React.createElement("h2", {}, "Let's get started!"),
+  React.createElement(Expenses, { items: expenses })
+);
+```
+
+and that's why, react needs a parent element to create it's childs, otherwise it can't create many element without a parent.
+
+Here's an explanation of the code:
+
+- **return statement**: This indicates that the following code defines what a React component should return. This return value essentially determines what appears on the UI.
+
+- **React.createElement**: This is a core function in React used to create elements that represent the UI components. It takes three arguments:
+
+- **Type**: The first argument specifies the type of element being created. In this case, it's a string 'div', which represents an HTML division tag.
+
+- **Props (optional)**: The second argument is an object containing any properties (props) that should be applied to the element. Here, an empty object {} is used, indicating no props are set for the div.
+
+- **Children (optional)**: Subsequent arguments represent the children (content) that will be nested inside the parent element. Here, there are two children defined:
+
+  - React.createElement('h2', {}, "Let's get started!"): This creates an <h2> (heading level 2) element with the text "Let's get started!". The empty object {} again signifies there are no props for the heading.
+
+  - React.createElement(Expenses, { items: expenses }): This creates an instance of a component named Expenses. The component likely handles displaying a list of expenses. It receives one prop named items set to the variable expenses, which presumably contains the data for the expenses to be displayed.
+
+Overall structure: So, this code creates a div element that contains an <h2> heading and an Expenses component. The Expenses component will likely render the provided expenses data in its own way.
+
+In summary, this code snippet defines a React component that renders a layout with a heading and an Expenses component that will display expense information.
 
 # Rendering Lists
 
@@ -297,7 +334,7 @@ When maping item we can optionally add a second parameter as an **index**.
 
 The arrow function can optionally have a parameter that represent the browser event, you can call it **e** or **event**
 
-```jsx
+```tsx
 function ListGroup() {
   let items = [];
   return (
@@ -318,7 +355,7 @@ function ListGroup() {
 
 PS: it's totally fine to write the logic of a function in the same line only if it was simple, if the function got complicated you may need to transform the logic into seperate function.
 
-```jsx
+```tsx
 import { MouseEvent } from "react";
 
 function ListGroup() {
@@ -359,7 +396,7 @@ function ListGroup() {
 }
 ```
 
-PS: in order to print the item using a separate function, we got do some changes, as you can see here:
+PS: in order to print the item using a separate function, we got to do some changes, as you can see here:
 
 ```jsx
 const handleClick = (item: string, index: number) => {
@@ -810,7 +847,7 @@ Note: if we wanna pass HTML content, we'll get a compilation error, because we t
 import ReactNode from "react";
 
 interface Props {
-  children: ReactNode /*rename it here*/;
+  children: ReactNode; /*rename it here*/;
 }
 
 const Alert = ({ children }: Props) => {
@@ -841,7 +878,7 @@ function App() {
 
 it's an easy-to-use extension :)
 
-# Button exercice
+# Button exercise
 
 ```jsx
 import ButtonsExercice from "./components/ButtonsExercice";
@@ -883,7 +920,7 @@ const ButtonsExercice = ({ children, color = "primary", onClick }: Props) => {
     - color?: "primary": string literal, like this we can only set this value to "primary"
     - color?: "primary" | "secondary" ...: adding a second string literal using the union operator. we're telling the compiler that's this values are the only accepted values.
 
-# Showing an Alert exercice
+# Showing an Alert exercise
 
 ```jsx
 // <-- Alert Component -->
@@ -968,3 +1005,21 @@ export default App;
 
 1.  What is the difference between 'fragmaent' and '<>'
 2.  in the event video, why did we get the type error when changed the function from the inline arrow function to handleClick function???
+
+# Additional:
+
+## Derived State
+
+Also sometimes known as "computed state" is when we derive a value for a variable upon re-render from some other state. This is best demonstrated with an example.
+
+## Controlled Component
+
+- **def-1:** A controlled component is one where the data(typically input form data), is handled by the React state mechanism. Rather than allowing the DOM to manage this data, React takes charge, ensuring that data handling and changes are consistent with the React paradigm.
+
+- **def-2:** React’s Controlled Components manage form data via component state, receiving values through props and updating through callbacks like onChange. The parent component maintains the state, passing updated values as props to the controlled component. Form elements, whether typed (e.g., textarea, input) or selected (e.g., radio buttons, checkboxes), trigger state updates through functions on change.
+
+- **Easy def:** A controlled component in React is a form element (like an input, textarea, or select) whose value is controlled by React's state. The component's internal state is fully managed by the React component, and any changes to the input field are reflected in the component's state, making React the single source of truth.
+
+# Stateful vs Stateless component
+
+Stateful components manage the application state, handle data fetching, and facilitate user interactions, while stateless components focus on presenting the data and ensuring a consistent UI experience, in other words it represents a UI element without any internal state management. This separation of concerns promotes code reusability, maintainability, and scalability.

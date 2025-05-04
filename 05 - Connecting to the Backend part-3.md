@@ -4,7 +4,7 @@ Our code lately has grown quite a bit, it needs some improvments, that's what we
 
 The first issue is the duplication with the backend url, to improve this we're going to create a separate module where we store our different configuration settings for making HTTP calls.
 
-We add new folder called services in src folder, in this module we're going to add basic modules that provide services or functionalities to our application, The servecies are not about th UI, they're about functionality. we add a ts file called **api-client.ts**.
+We add new folder called **services** in src folder, in this module we're going to add basic modules that provide services or functionalities to our application, The servecies are not about the UI, they're about functionality. we add a TS file called **api-client.ts**.
 
 In this file we're going to create new access client with a custom configuration.
 
@@ -34,11 +34,11 @@ With this service in place, anywhere we want to talk to our back-end, we simply 
 
 The next issue in this code is that our component is too concerned with making HTTP request, for exp it knows about the requests methods, endpoint(which is repeated in many places) and the **AbortController** which is only about HTTP.
 
-Our component is like a chef, which is also responsible for shopping the ingrediants, he should not concider with shopping, they should only focus on theire primary responsibilty.
+Our component is like a chef, which is also responsible for shopping the ingrediants, he should not consider with shopping, they should only focus on theire primary responsibilty.
 
 Our component also should focus only about his primary responsability, which is returning markeup and handling user interaction at a high level. so in order to improve this code, we should extract all the logic around making HTTP requests, into a seperate service, this allow us to seperate concers and make our code more modular and reusable, potentially we can reuse this service in other components.
 
-**First**, in the services folder we add a new file called **user-service.ts**, inside this we create a class with all the functionalities we need. Check the code below
+**First**, in the services folder we add a new file called **user-service.ts**, inside this we create a class with all the functionalities we need. Check the code below:
 
 ```tsx
 // user-service.ts
@@ -59,11 +59,10 @@ class UserServcie {
 
     // return apiClient.get<User[]>("/users", {...
     // instead of returning only this promise method, we're gonna store it
-    // in an object called resuest, and return it in the end along with
+    // in an object called request, and return it in the end along with
     // a cancel method, we call controller.abort() in this function
-    // like this the consumer will only use the cancel method only
-    // for canceling a request, how it happens in irrelevant, that's
-    // implementation details
+    // like this the consumer will only use the cancel method only for
+    // canceling a request, how it happens is irrelevant, that's implementation details
     const request = apiClient.get<User[]>("/users", {
       signal: controller.signal,
     });
@@ -89,11 +88,19 @@ export default new UserServcie();
 ```
 
 ```tsx
+import { useEffect, useState } from "react";
+import { CanceledError } from "./services/api-client";
+import UserService, { User } from "./services/user-service";
+import userService from "./services/user-service";
+.
+.
+.
 // component
-
 useEffect(() => {
   setLoading(true);
-  const { request, cancel } = UserService.getAllUsers(); // this return a promise
+  // this return a promise
+  const { request, cancel } = UserService.getAllUsers();
+
   request
     .then((res) => {
       setUsers(res.data);
@@ -163,7 +170,7 @@ With those changes, our component knows nothing about our HTTP request, it's mor
 
 # Creating a Generic HTTP Service
 
-OUr user service class encapsulate all the logic for making http requests, if we create another service class for post for exp, it will be almost identical, the only difference is the end-points and the objects that we sent to the server, we can use TypeScript magic to create a generic Http service class.
+Our user service class encapsulate all the logic for making http requests, if we create another service class for post for exp, it will be almost identical, the only difference is the end-points and the objects that we sent to the server, we can use TypeScript magic to create a generic Http service class.
 
 we create a new file called `http-service.ts`, we past all the code from our `user-service.ts` and paste it in our new file. next we'll modify the code line by line, anywhere we have a ref to user, we should either remove it or make it generic.
 

@@ -48,7 +48,7 @@ const handleClick = () => {
 
 The names we use for states like ('isApproved' and 'setApproved'), those are local identifier in this function, react is not aware of them, when we use state hook, we're only telling react to store a value, react is gonna store those values, most likely inside an Array.
 
-When react re-render a component, it will look at that Array and store the value inside the identifiers, So react relys on the order of the elements inside the Aarray so it can map tha values properly to the local variables of that function.
+When react re-render a component, it will look at that Array and store the value inside the identifiers, So react relys on the order of the elements inside the Array so it can map tha values properly to the local variables of that function.
 
 That means we cannot use Hooks inside if statments, for loops or nested functions, because it can affect the order of which the states Hook are called.
 
@@ -114,8 +114,7 @@ React is designed around this concept, it expect every component we creat to be 
 > - To keep our components pure, we should avoid making changes during the render phase.
 
 ```jsx
-// As an exp, this component isn't pure, bcs count will increases every time you use the or we call this component.
-
+// As an exp, this component isn't pure, bcs count will increases every time you use or call this component.
 let count = 0;
 
 const Message = () => {
@@ -207,9 +206,11 @@ function Drink() {
 export default Drink;
 ```
 
-    PS: It is not possible to update a property value of a state object and then use the State hook to update an object, we should have an brand new object and then update the existing object, that's how we tell react about the update.
+PS: It is not possible to update a property value of a state object and then use the State hook to update an object, we should have an brand new object and then update the existing object, that's how we tell react about the update.
 
-> - Just like Props, we should treat object like immutable or read-only.
+> React relies on shallow comparison to detect changes in state. If you directly modify a property of a state object without creating a new object, React will not be able to detect that a change has occurred, because it compares only the reference of the object, not the internal properties.
+
+> Just like Props, we should treat object like immutable or read-only.
 
 In this example here we used State Hook to create a drink object with some properties, then we used handle function to create a brand new object to update the old object state.
 
@@ -415,7 +416,7 @@ function App() {
 export default App;
 ```
 
-# Exercice
+# exercise
 
 # Questions
 

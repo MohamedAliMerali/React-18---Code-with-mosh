@@ -1,8 +1,8 @@
 # Connecting to the Backend
 
-As you have ssen react is a library for building user-interfaces, or ffront-end, but also every app needs a back-end which is the part that runs on the server, it provides the business logic, data managment, and security features, such as authentication and authorization.
+As you have seen react is a library for building user-interfaces, or front-end, but also every app needs a back-end which is the part that runs on the server, it provides the business logic, data managment, and security features, such as authentication and authorization.
 
-we have various language and frameworks to build back-end such as Express.js, Django, Ruby on Rails, Spring, ASP.NET Core and more, building backedns is an entirely different topic and its outside the scope of this coures, but as a react developer you need to know how to connect your React apps to the backend, This is what this section is for.
+we have various language and frameworks to build back-end such as Express.js, Django, Ruby on Rails, Spring, ASP.NET Core and more, building backends is an entirely different topic and its outside the scope of this coures, but as a react developer you need to know how to connect your React apps to the backend, This is what this section is for.
 
 ## keywords:
 
@@ -27,7 +27,7 @@ we have various language and frameworks to build back-end such as Express.js, Dj
 
 # Understanding the Effect Hook
 
-Before we talk about connecting our React apps to a backhand, you need to understand how to use the effect hooks in React. Earlier I told you that our React components should be pure functions, a pure function should not have any side effects and should return the same result if begin with the same input.
+Before we talk about connecting our React apps to a backend, you need to understand how to use the effect hooks in React. Earlier I told you that our React components should be pure functions, a pure function should not have any side effects and should return the same result if begin with the same input.
 
 Now, to make our functions or components pure, we have to keep any code that makes changes outside of the render phase, but There are situations where you might need to store some data in the local storage of the browser so we can remember it in the future. Or we may need to call the server to fetch or save the data or maybe want to manually modify DOM elements.
 
@@ -52,7 +52,9 @@ function App() {
 }
 ```
 
-Now here's the thing. This piece of code has nothing to do with returning some JSX markup with this piece of code, we are changing the state of the DOM. So we say this piece of code has a side effect, it's changing something outside of this component. So now our component is no longer a pure component, To make this a pure component, we can use the **effect hook**.
+Now here's the thing. This piece of code has nothing to do with returning some JSX markup with this piece of code, we are changing the state of the DOM. So we say this piece of code has a side effect, it's changing something outside of this component. So now our component is no longer a pure component, To make this a pure component, we can use the **`effect hook`**.
+
+> **`effect hook`**: The Effect Hook lets you perform side effects in function components.
 
 we call the **`useEffect`** and give it an arrow function then we move this piece of code that causes side effects inside this function.
 
@@ -98,7 +100,7 @@ so, when we have multiple effects, react will run them in order after each ren
 
 This function that we pass to the effect hook gets executed after each render, but there are situations where we don't want this default behaviour.
 
-    PS: you learned that this the effect function gets executed after each render, if we update a state in it, which will triggers another render, we'll end up in an infinite loop of updating state, rendering and executing our effects.
+    PS: you learned that the effect function gets executed after each render, if we update a state in it, which will triggers another render, we'll end up in an infinite loop of updating state, rendering and executing our effects.
 
     To solve this problem, we should tell react to run this effect only once the first time our component is rendered.
 
@@ -113,7 +115,7 @@ useEffect(() => {
 }, []);
 ```
 
-To see how we can use The effect function and and update states, Let's say we want to add a drop on this on the top three categories. When the user selects a category, we want to show the products in that category.
+To see how we can use The effect function and update states, Let's say we want to add a drop on this on the top three categories. When the user selects a category, we want to show the products in that category.
 
     PS: We don't always have to exclusively use an interface. if we only have a single or a maximum of two props, we can declare them inline here.
 
@@ -164,20 +166,20 @@ function App() {
 export default App;
 ```
 
-So let's quickly recap. The second argument to the effect book is that dependencies are in if you leave it out, react will execute our effect after every render. If we pass an empty array, react will execute our effect only once the first time our component is rendered. If you add one or more values here, which can be props or state variables. React will rerun our effect every time any of these values changes.
+So let's quickly recap. The second argument to the effect hook is dependencies, if you leave it out, react will execute our effect after every render. If we pass an empty array, react will execute our effect only once the first time our component is rendered. If you add one or more values here, which can be props or state variables. React will rerun our effect every time any of these values changes.
 
 # Effect Clean Up
 
-Sometimes the code that we pass to that back hook doesn't need any cleanup, as we saw in a presvious example, we were simply setting the title of the document. But what if this was a chat component, and here we were connecting to a chat server. At some point, we need to disconnect from the chat circuit, For example, if the user navigates away from the chat page, we have to disconnect on the chat server. Let's see how we can do this.
+Sometimes the code that we pass to that effect hook doesn't need any cleanup, as we saw in a presvious example, we were simply setting the title of the document. But what if this was a chat component, and here we were connecting to a chat server. At some point, we need to disconnect from the chat circuit, For example, if the user navigates away from the chat page, we have to disconnect on the chat server. Let's see how we can do this.
 
 we will create two functions, **connect** to simulate connecting to a chat server, and we need a function for disconnecting.
 
 ```tsx
-const connect = () => cpnsole.log("Connecting");
-const connect = () => cpnsole.log("");
+const connect = () => console.log("Connecting");
+const disconnect = () => console.log("disconnect");
 ```
 
-In the effect book, we call the Connect function. to provide cleanup code, we return a function, and in this function, we call our disconnect function, So the function that we pass to the front hook can optionally return a function for cleaning up. This is not always necessary, but if we need to do clean up, this is the way we do it.
+In the effect hook, we call the Connect function. to provide cleanup code, we return a function, and in this function, we call our disconnect function, So the function that we pass to the front hook can optionally return a function for cleaning up. This is not always necessary, but if we need to do clean up, this is the way we do it.
 
 ```tsx
 useEffect(() => {
@@ -197,11 +199,11 @@ useEffect(() => {
 
 Now let's see how this work, if we go back to the browser, we're getting three messages, _connecting_, _disconnecting_ and _connecting_.
 
-So, In the development mode, with a strict mode turned on, react renders each component twice. So in this case, react renders our app component that's why we see the _connected_ message, but before react renders our app component the second time first is going to remove the component from the screen. This is called **`unmounting`**. So just like we can mount a painting on a wall, react mounts our components on the screen, and unmount them when they're no longer needed. So with this strict mode enable before react mounts our components for the second time, first it has to unmount it that is why our cleanup code is executed.
+So, In the development mode, with a strict mode turned on, react renders each component twice. So in this case, react renders our app component that's why we see the _connected_ message, but before react renders our app component the second time, first it's going to remove the component from the screen. This is called **`unmounting`**. So just like we can mount a painting on a wall, react mounts our components on the screen, and unmount them when they're no longer needed. So with this strict mode enable before react mounts our components for the second time, first it has to unmount it that is why our cleanup code is executed.
 
 # Fetching Data
 
-Now lets see how we can fetch data from teh server, we're gonna use a fake backend called **JSONPlaceholder**, in this website we have various end-point to get dummy data.
+Now lets see how we can fetch data from the server, we're gonna use a fake backend called **JSONPlaceholder**, in this website we have various end-point to get dummy data.
 
 To send a request to the server, we can use the **fetch** function that is implemented in all modern browsers, but a lot of people prefer to use a library called **axios**, so lets install this:
 
@@ -221,9 +223,9 @@ useEffect(() => {
 });
 ```
 
-    PS: a **Promise** is an object that holds the eventual result or failure of an asynchronous operation.
-
-    asynchronous: a fancy term for an operation that is gonna take a long time, in other words, it means that a process operates independently of other processes.
+> PS: a **Promise** is an object that holds the eventual result or failure of an asynchronous operation.
+>
+> **asynchronous**: a fancy term for an operation that is gonna take a long time, in other words, it means that a process operates independently of other processes.
 
 all promises have a method called **then**, we can call it right after and give it a callback function, this callback function will get executed when our promise is resolved and the result is ready, in this case we need to find a fucntion that has a parameter called _res_ or _response_.
 
@@ -239,16 +241,16 @@ interface User {
 After that, when calling the get method, we specify in angle bracket the type of data we're going to fetch.
 
 ```tsx
-axios.gett<User[]>("https://jsonplaceholder.typicode.com/users");
+axios.get<User[]>("https://jsonplaceholder.typicode.com/users");
 ```
 
-After fetching the data we're gonna set our users var to the fetched users data, be aware that u may face an issue here, because we initialized the users with an empty array So TS compiler doesn't know the type of objects we're going to store here, we need to specify the type of the array.
+After fetching the data we're gonna set our users var to the fetched users data, be aware that u may face an issue here, because we initialized the users with an empty array so TS compiler doesn't know the type of objects we're going to store here, we need to specify the type of the array.
 
 ```tsx
 const [users, setUsers] = useState<User[]>([]);
 // .
 // .
-axios.gett<User[]>("https://jsonplaceholder.typicode.com/users").then((res) => {
+axios.get<User[]>("https://jsonplaceholder.typicode.com/users").then((res) => {
   setUsers(res.data);
 });
 ```
@@ -265,7 +267,7 @@ useEffect(() => {
 }, []);
 ```
 
-Now, with the final step, we're going torender the users list, here's the final code:
+Now, with the final step, we're going to render the users list, here's the final code:
 
 ```tsx
 import axios from "axios";
@@ -299,9 +301,9 @@ function App() {
 
 # Understanding HTTP Requests
 
-As a front-end developer , it's important that u'll understand what happend under the hood when uo call the get method, and thats we're gonna talk about in this lesson
+As a front-end developer , it's important that u'll understand what happend under the hood when you call the get method, and thats what we're gonna talk about in this lesson.
 
-When we call the get method, axios sent an HTTP(hypertext transfer protocol) request to the server, it's a protocol to transfer data over the internet.
+When we call the get method, axios sent an HTTP (hypertext transfer protocol) request to the server, it's a protocol to transfer data over the internet.
 
 if you go to the network tab in developer mode in your browser, you can filter for axios requests by clicking on **Fetch/XHR**, XHR means XML HTTP request, you'll find the request to the user endpoint, the status will be 200 which means successful.
 
@@ -315,7 +317,7 @@ In the preview tab we can see the data returned from the server properly formate
 
 # Handling errors
 
-When calling the server many things can go wrong, perhaps our network may drop out or the server is gonna go offline and so one, as a good developer u need to anticipate such problems and handle error properly.
+When calling the server many things can go wrong, perhaps our network may drop out or the server is gonna go offline and so on, as a good developer u need to anticipate such problems and handle error properly.
 
 In JS all promisses have a method called **catch** that we can use for catching errors, we give it a callback function so it gets executed if something goes wrong while fetching the data, this function should take an error object, you can log that on the console, you can simulate an error by changing the url so you can see the error object.
 
@@ -369,7 +371,7 @@ function App() {
 }
 ```
 
-# Working with async and awit
+# Working with async and await
 
 we can write this code in kinda more linear way, using async and awit.
 
@@ -381,7 +383,7 @@ The get method returns a promise, if this promise is resolved, we'll get a respo
 
 <!-- // get -> promise -> res/err -->
 
-In JS if we have a promise, we can put tha **await** keyword in front of the promise to get the result, so we can await the promise we're getting from the **get** method to get the response object.
+In JS if we have a promise, we can put the **await** keyword in front of the promise to get the result, so we can await the promise we're getting from the **get** method to get the response object.
 
 ```tsx
 const [users, setUsers] = useState<User[]>([]);
@@ -399,7 +401,7 @@ useEffect(() => {
 
 we will have a compilation error saying "**'await' expression are only allowed within async function and at the top levels of modules.**", So in order to use it here we need to mark the containing function as async.
 
-Now we'll get another kind of error because doesn't allow us to pass an **asych** function to the effect hook, to work around this, we need to remove the async keyword and defined an async function inside the function that we passed to the effect hook, then we move our line up inside the function, so we await the promise, then we got a response, then we call setUsers and pass response.data.
+Now we'll get another kind of error because it doesn't allow us to pass an **asynch** function to the effect hook, to work around this, we need to remove the async keyword and defined an async function inside the function that we passed to the effect hook, then we move our line up inside the function, so we await the promise, then we got a response, then we call setUsers and pass response.data.
 
 we call that function right after...
 
@@ -419,28 +421,29 @@ useEffect(() => {
 }, []);
 ```
 
-This was the happy path, if the promise is resolved, what if our promise was rejected, for that we need to wrap the axis call in try catch block, and just like before, in case of an error we call setError and pass the error message.
+This was the happy path, if the promise is resolved, what if our promise was rejected, for that we need to wrap the axios call in try catch block, and just like before, in case of an error we call setError and pass the error message.
 
-But we will have an error sayin "'err' is of type 'unknown'", so the TS compiler cannot tell the type of **error** object, the problem is we cannot annotate the _err_ obkect in the catch block, we cannot set it to **AxiosError**, bcs type annotation is not allowed in a catch block, to work around this, we have to wrap this _err_ in parenthesis then we use **as** keyword to tell the TS compiler the type of that object, that is going to be **`AxiosError`**.
+But we will have an error saying "'err' is of type 'unknown'", so the TS compiler cannot tell the type of **error** object, the problem is we cannot annotate the _err_ object in the catch block, we cannot set it to **AxiosError**, bcs type annotation is not allowed in a **catch block**, to work around this, we have to wrap this _err_ in parenthesis then we use **as** keyword to tell the TS compiler the type of that object, that is going to be **`AxiosError`**.
 
 ```tsx
 const [users, setUsers] = useState<User[]>([]);
 const [error, setError] = useState("");
 
-try {
-  useEffect(() => {
-    const fetchUsers = async () => {
+useEffect(() => {
+  const fetchUsers = async () => {
+    try {
       const res = await axios.get<User[]>(
-        "https://jsonplaceholder.typicode.com/users"
+        "https://jsonplaceholder.typicode.com/usersqq"
       );
       setUsers(res.data);
-    };
+    } catch (err) {
+      console.log((err as AxiosError).message);
+      setError((err as AxiosError).message);
+    }
+  };
 
-    fetchUsers();
-  }, []);
-} catch (err) {
-  setError((err as AxiosError).message);
-}
+  fetchUsers();
+}, []);
 ```
 
     PS: there is a fair amount of extra work in here, you may want to use the first one, feel free to do so...
@@ -453,7 +456,7 @@ So as a best practise when we fetch data in an effect we should also provide a c
 
 when we call the get method, as a second argument we pass a request configuration object, in this object we set the **signal** property to **controller.signal**, and finally, at the end we return our clean-up function, in this one we call **controller.abort()**.
 
-If we check our component, we'll find a _canceled_ message, which is ugly, to remove this we will add a block of code to the callback function in the catch part, first we check if the error object is an insatnce of **CanceledError** that is defined in the axios module, if so we return imedietly, otherwise we set the error to **err.message**.
+If we check our component, we'll find a _canceled_ message, which is ugly, to remove this we will add a block of code to the callback function in the catch part, first we check if the error object is an insatnce of **CanceledError** that is defined in the axios module, if so we return immediately, otherwise we set the error to **err.message**.
 
 ```tsx
 const [users, setUsers] = useState<User[]>([]);

@@ -8,10 +8,15 @@
 // import ListGroup from "./components/ListGroup";
 // import Message from "./Message";
 
-import { useEffect, useState } from "react";
-import { CanceledError } from "./services/api-client";
-import UserService, { User } from "./services/user-service";
-import userService from "./services/user-service";
+import Test from "./components/TEST";
+
+// import ShortenUrl from "./components/ShortenUrl";
+// import Todos from "./react-query/Todos";
+
+// import { useEffect, useState } from "react";
+// import { CanceledError } from "./services/api-client";
+// import UserService, { User } from "./services/user-service";
+// import userService from "./services/user-service";
 
 // import Form from "./components/expense-tracker/components/Form";
 // import Filter from "./components/expense-tracker/components/Filter";
@@ -21,6 +26,17 @@ import userService from "./services/user-service";
 
 // // ///////////////////////////////////////////////////////////////////////////
 
+function App() {
+  return <Test></Test>;
+  // return <Todos></Todos>;
+}
+
+// // // ///////////////////////////////////////////////////////////////////////////
+// function App() {
+//   return <ShortenUrl></ShortenUrl>;
+//   // return <Todos></Todos>;
+// }
+// // ///////////////////////////////////////////////////////////////////////////
 // function App() {
 //   const [category, setCategory] = useState("");
 //   const [expenses, setExpenses] = useState([
@@ -65,115 +81,115 @@ import userService from "./services/user-service";
 
 // ///////////////////////////////////////////////////////////////////////////
 
-function App() {
-  const [users, setUsers] = useState<User[]>([]);
-  const [error, setError] = useState("");
-  const [isLoading, setLoading] = useState(false);
+// function App() {
+//   const [users, setUsers] = useState<User[]>([]);
+//   const [error, setError] = useState("");
+//   const [isLoading, setLoading] = useState(false);
 
-  useEffect(() => {
-    setLoading(true);
-    const { request, cancel } = UserService.getAll<User>(); // this return a promise
-    request
-      .then((res) => {
-        setUsers(res.data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        if (err instanceof CanceledError) return;
-        setError(err.message);
-        setLoading(false);
-      });
-    // .finally(() => {
-    //   // this won't work in strict mode, use the other lines
-    //   setLoading(false);
-    // });
+//   useEffect(() => {
+//     setLoading(true);
+//     const { request, cancel } = UserService.getAll<User>(); // this return a promise
+//     request
+//       .then((res) => {
+//         setUsers(res.data);
+//         setLoading(false);
+//       })
+//       .catch((err) => {
+//         if (err instanceof CanceledError) return;
+//         setError(err.message);
+//         setLoading(false);
+//       });
+//     // .finally(() => {
+//     //   // this won't work in strict mode, use the other lines
+//     //   setLoading(false);
+//     // });
 
-    return () => cancel();
-    // here we should return a controller object, which is about HTTP req
-    // To hide the complexity, we should return such a function from
-    // user-service, we won't import it in order to hide the complexity.
-    // return () => controller.abort();
-  }, []);
+//     return () => cancel();
+//     // here we should return a controller object, which is about HTTP req
+//     // To hide the complexity, we should return such a function from
+//     // user-service, we won't import it in order to hide the complexity.
+//     // return () => controller.abort();
+//   }, []);
 
-  const deleteUser = (user: User) => {
-    const originalUsers = [...users];
-    // we're setting the users first, Optimistic Updates
-    // we pass all the users except the given one
-    setUsers(users.filter((u) => u.id !== user.id));
+//   const deleteUser = (user: User) => {
+//     const originalUsers = [...users];
+//     // we're setting the users first, Optimistic Updates
+//     // we pass all the users except the given one
+//     setUsers(users.filter((u) => u.id !== user.id));
 
-    userService.delete(user.id).catch((err) => {
-      setError(err.message);
-      setUsers([...originalUsers]);
-    });
-  };
+//     userService.delete(user.id).catch((err) => {
+//       setError(err.message);
+//       setUsers([...originalUsers]);
+//     });
+//   };
 
-  const addUser = () => {
-    // we're setting the users first, Optimistic Updates
-    const originalUsers = [...users];
-    const newUser = { id: 0, name: "whatDidUJustSay!" };
-    setUsers([newUser, ...users]);
+//   const addUser = () => {
+//     // we're setting the users first, Optimistic Updates
+//     const originalUsers = [...users];
+//     const newUser = { id: 0, name: "whatDidUJustSay!" };
+//     setUsers([newUser, ...users]);
 
-    userService
-      .create(newUser)
-      .then((res) => {
-        setUsers([res.data, ...users]);
-        console.log("DONE");
-      })
-      .catch((err) => {
-        setError(err.message);
-        setUsers(originalUsers);
-      });
-  };
+//     userService
+//       .create(newUser)
+//       .then((res) => {
+//         setUsers([res.data, ...users]);
+//         console.log("DONE");
+//       })
+//       .catch((err) => {
+//         setError(err.message);
+//         setUsers(originalUsers);
+//       });
+//   };
 
-  function updateUser(user: User): void {
-    const originalUsers = [...users];
-    const updatedUser = { ...user, name: user.name + "!" };
+//   function updateUser(user: User): void {
+//     const originalUsers = [...users];
+//     const updatedUser = { ...user, name: user.name + "!" };
 
-    setUsers(users.map((u) => (u.id === user.id ? updatedUser : u)));
+//     setUsers(users.map((u) => (u.id === user.id ? updatedUser : u)));
 
-    userService.update(updatedUser).catch((err) => {
-      setError(err.message);
-      setUsers([...originalUsers]);
-    });
-  }
+//     userService.update(updatedUser).catch((err) => {
+//       setError(err.message);
+//       setUsers([...originalUsers]);
+//     });
+//   }
 
-  return (
-    <>
-      {error && <p className="text-danger">{error}</p>}
-      {isLoading && <div className="spinner-border"></div>}
-      <button className="btn btn-primary mb-3" onClick={() => addUser()}>
-        Add
-      </button>
-      <ul className="list-group">
-        {users.map((user) => (
-          // li is a flex container here
-          // one of the utility classes in bootstrap, d is short for display
-          <li
-            key={user.id}
-            className="list-group-item d-flex justify-content-between"
-          >
-            {user.name}
-            {/* we're adding this div to keep both buttons together on the right side */}
-            <div>
-              <button
-                className="btn btn-secondary mx-2"
-                onClick={() => updateUser(user)}
-              >
-                Update
-              </button>
-              <button
-                className="btn btn-outline-danger"
-                onClick={() => deleteUser(user)}
-              >
-                Delete
-              </button>
-            </div>
-          </li>
-        ))}
-      </ul>
-    </>
-  );
-}
+//   return (
+//     <>
+//       {error && <p className="text-danger">{error}</p>}
+//       {isLoading && <div className="spinner-border"></div>}
+//       <button className="btn btn-primary mb-3" onClick={() => addUser()}>
+//         Add
+//       </button>
+//       <ul className="list-group">
+//         {users.map((user) => (
+//           // li is a flex container here
+//           // one of the utility classes in bootstrap, d is short for display
+//           <li
+//             key={user.id}
+//             className="list-group-item d-flex justify-content-between"
+//           >
+//             {user.name}
+//             {/* we're adding this div to keep both buttons together on the right side */}
+//             <div>
+//               <button
+//                 className="btn btn-secondary mx-2"
+//                 onClick={() => updateUser(user)}
+//               >
+//                 Update
+//               </button>
+//               <button
+//                 className="btn btn-outline-danger"
+//                 onClick={() => deleteUser(user)}
+//               >
+//                 Delete
+//               </button>
+//             </div>
+//           </li>
+//         ))}
+//       </ul>
+//     </>
+//   );
+// }
 // // ///////////////////////////////////////////////////////////////////////////
 
 // function App() {
@@ -224,7 +240,7 @@ function App() {
 // import AlertExercice from "./components/AlertExercice";
 // import { useState } from "react";
 //
-// // Alert Exercice
+// // Alert exercise
 // function App() {
 //   const [showState, setShowState] = useState(false);
 
@@ -253,7 +269,7 @@ function App() {
 // }
 // // ///////////////////////////////////////////////////////////////////////////
 // import ButtonsExercice from "./components/ButtonsExercice";
-// // Button Exercice
+// // Button exercise
 // function App() {
 //   const handleClick = (children: string) => {
 //     console.log(children);
